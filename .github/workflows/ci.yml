@@ -1,0 +1,156 @@
+name: Acromere Weather Website CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  ACM_RELEASE: "latest"
+  ACM_PRODUCT: "wx.acromere.com"
+
+  ACM_GPG_PASSWORD: ${{ secrets.ACM_GPG_PASSWORD }}
+  ACM_KEYSTORE_PASSWORD: ${{ secrets.ACM_KEYSTORE_PASSWORD }}
+  ACM_MAVEN_REPO_USERNAME: ${{ secrets.ACM_MAVEN_REPO_USERNAME }}
+  ACM_MAVEN_REPO_PASSWORD: ${{ secrets.ACM_MAVEN_REPO_PASSWORD }}
+  ACM_XENON_REPO_USERNAME: ${{ secrets.ACM_XENON_REPO_USERNAME }}
+  ACM_XENON_REPO_PASSWORD: ${{ secrets.ACM_XENON_REPO_PASSWORD }}
+
+  DISPLAY: ":99"
+  GITHUB_REF: ${{ github.ref }}
+  JAVA_VERSION: "25"
+  MAVEN_PARMS: "-B -U -V --settings .github/settings.xml --file pom.xml"
+  NODE_VERSION: "22"
+  XVFB_PARMS: "-screen 0 1920x1080x24 -nolisten unix"
+
+jobs:
+
+  client:
+    name: Client
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch sources
+        uses: actions/checkout@v6
+
+      - name: Fetch CI/CD resources
+        uses: actions/checkout@v6
+        with:
+          repository: acromere/canoe
+          path: .github
+
+      - name: Configuration
+        shell: bash
+        run: |
+          source .github/config.sh
+
+      - name: NPM Repository Cache
+        uses: actions/cache@v5
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{env.NODE_VERSION}}
+          cache: 'npm'
+
+      - name: Install
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: npm run test:ci
+
+      - name: Package
+        run: |
+          cd dist
+          zip -r ../client.zip *
+
+      - name: Copy Client ZIP
+        if: ${{ github.actor != 'dependabot[bot]' }}
+        run: scp -B client.zip ${{env.ACM_XENON_REPO_USERNAME}}@acromere.com:${{env.PRODUCT_DEPLOY_PATH}}/client.zip
+
+      #      - name: Copy Provider Icon
+      #        run: |
+      #          scp -B server/target/main/images/acromere.png ${{env.ACM_XENON_REPO_USERNAME}}@acromere.com:/opt/acm/repo/stable/acromere/provider.png
+      #          scp -B server/target/main/images/logo-dark.png ${{env.ACM_XENON_REPO_USERNAME}}@acromere.com:/opt/acm/repo/stable/acromere/provider-dark.png
+      #          scp -B server/target/main/images/logo-light.png ${{env.ACM_XENON_REPO_USERNAME}}@acromere.com:/opt/acm/repo/stable/acromere/provider-light.png
+
+#      - name: Update the Website Client
+#        if: ${{ github.actor != 'dependabot[bot]' }}
+#        run: ssh ${{env.ACM_XENON_REPO_USERNAME}}@acromere.com bin/update-acromere-wx-website-client
+
+#  server:
+#    name: Server
+#    runs-on: ubuntu-latest
+#    permissions:
+#      contents: write
+#      pull-requests: write
+#      repository-projects: write
+#      security-events: read
+#    steps:
+#      - name: Fetch sources
+#        uses: actions/checkout@v6
+#
+#      - name: Fetch CI/CD resources
+#        uses: actions/checkout@v6
+#        with:
+#          repository: acromere/canoe
+#          path: .github
+#
+#      - name: Configuration
+#        shell: bash
+#        run: |
+#          source .github/config.sh
+#
+#      # Required to render the product icon
+#      - name: Set up Virtual Display
+#        run: |
+#          Xvfb ${{env.DISPLAY}} ${{env.XVFB_PARMS}} &
+#
+#      - name: Set up Java
+#        uses: actions/setup-java@v5
+#        with:
+#          distribution: temurin
+#          java-version: ${{env.JAVA_VERSION}}
+#
+#      - name: Maven Repository Cache
+#        uses: actions/cache@v5
+#        with:
+#          path: ~/.m2/repository
+#          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+#          restore-keys: |
+#            ${{ runner.os }}-maven-
+#
+#      - name: Compile
+#        run: |
+#          mvn ${{env.MAVEN_PARMS}} compile
+#
+#      - name: Test
+#        run: |
+#          mvn ${{env.MAVEN_PARMS}} test
+#
+#      - name: Deploy to Maven Repo
+#        run: |
+#          mvn ${{env.MAVEN_PARMS}} deploy -Dmaven.test.skip=true
+#
+#      - name: Deploy to Xenon Repo
+#        if: ${{ github.actor != 'dependabot[bot]' }}
+#        run: |
+#          ssh -t ${{env.ACM_XENON_REPO_USERNAME}}@acromere.com "mkdir -p ${{env.PRODUCT_DEPLOY_PATH}};"
+#          if [ $? -ne 0 ]; then exit 1; fi
+#          scp -B target/server.jar ${{env.ACM_XENON_REPO_USERNAME}}@acromere.com:${{env.PRODUCT_DEPLOY_PATH}}/server.jar
+#          if [ $? -ne 0 ]; then exit 1; fi
+#          scp -B server/etc/* ${{env.ACM_XENON_REPO_USERNAME}}@acromere.com:${{env.PRODUCT_DEPLOY_PATH}}
+#          if [ $? -ne 0 ]; then exit 1; fi
+#          scp -B target/main/images/product*.png ${{env.ACM_XENON_REPO_USERNAME}}@acromere.com:${PRODUCT_DEPLOY_PATH} 2>&1
+#          if [ $? -ne 0 ]; then exit 1; fi
+#          echo `date` > target/publish.flag
+#          if [ $? -ne 0 ]; then exit 1; fi
+#          scp -B target/publish.flag ${{env.ACM_XENON_REPO_USERNAME}}@acromere.com:${{env.PRODUCT_DEPLOY_PATH}}
