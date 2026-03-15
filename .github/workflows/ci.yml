@@ -85,9 +85,9 @@ jobs:
       #          scp -B server/target/main/images/logo-dark.png ${{env.ACM_XENON_REPO_USERNAME}}@acromere.com:/opt/acm/repo/stable/acromere/provider-dark.png
       #          scp -B server/target/main/images/logo-light.png ${{env.ACM_XENON_REPO_USERNAME}}@acromere.com:/opt/acm/repo/stable/acromere/provider-light.png
 
-#      - name: Update the Website Client
-#        if: ${{ github.actor != 'dependabot[bot]' }}
-#        run: ssh ${{env.ACM_XENON_REPO_USERNAME}}@acromere.com bin/update-acromere-wx-website-client
+      - name: Update the Website Client
+        if: ${{ github.actor != 'dependabot[bot]' }}
+        run: ssh ${{env.ACM_XENON_REPO_USERNAME}}@acromere.com bin/update-acromere-wx-website-client
 
 #  server:
 #    name: Server
