@@ -3,14 +3,11 @@ import {getDowName, pad} from "./Util.ts";
 
 export default function Clock() {
 
-  const [ss, setSeconcs] = useState('');
-  const [mm, setMinutes] = useState('');
-  const [hh, setHours] = useState('');
-  const [dd, setDay] = useState('');
-  const [mo, setMonth] = useState('');
-  const [yy, setYear] = useState('');
-  const [ap, setAmPm] = useState('');
-  const [dw, setDayOfWeek] = useState('');
+  const [time, setTime] = useState('');
+  const [date, setDate] = useState('');
+  const [ap, setAp] = useState('');
+  const [dow, setDow] = useState('');
+
 
   const updateTime = () => {
     let timestamp = new Date();
@@ -27,14 +24,10 @@ export default function Clock() {
     hh = hh % 12;
     hh = hh === 0 ? 12 : hh;
 
-    setYear(yy.toString());
-    setMonth(mo.toString());
-    setDay(dd.toString());
-    setHours(hh.toString());
-    setMinutes(mm.toString());
-    setSeconcs(ss.toString());
-    setAmPm(ap);
-    setDayOfWeek(dw);
+    setTime(pad(hh, 2) + ':' + pad(mm, 2) + ':' + pad(ss, 2));
+    setDate(pad(yy, 4) + '-' + pad(mo, 2) + '-' + pad(dd, 2));
+    setAp(ap);
+    setDow(dw);
   };
 
   useEffect(() => {
@@ -48,9 +41,9 @@ export default function Clock() {
 
   return (
     <div className="clock">
-      <div className="time">{pad(hh, 2)}:{pad(mm, 2)}:{pad(ss, 2)}<span className="ampm">{ap}</span></div>
-      <div className="date">{pad(yy, 4)}-{pad(mo, 2)}-{pad(dd, 2)}</div>
-      <div className="dow">{dw}</div>
+      <div className="time">{time}<span className="ampm">{ap}</span></div>
+      <div className="date">{date}</div>
+      <div className="dow">{dow}</div>
     </div>
   )
 }
