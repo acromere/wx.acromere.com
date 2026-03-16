@@ -72,7 +72,7 @@ jobs:
           cd dist
           zip -r ../client.zip *
 
-      - name: Publish Client ZIP
+      - name: Publish
         if: github.ref == 'refs/heads/main' && github.actor != 'dependabot[bot]'
         run: |
           ssh -t ${{env.ACM_XENON_REPO_USERNAME}}@acromere.com "mkdir -p ${{env.PRODUCT_DEPLOY_PATH}};"
@@ -85,8 +85,8 @@ jobs:
       #          scp -B server/target/main/images/logo-dark.png ${{env.ACM_XENON_REPO_USERNAME}}@acromere.com:/opt/acm/repo/stable/acromere/provider-dark.png
       #          scp -B server/target/main/images/logo-light.png ${{env.ACM_XENON_REPO_USERNAME}}@acromere.com:/opt/acm/repo/stable/acromere/provider-light.png
 
-      - name: Update the Website Client
-        if: ${{ github.actor != 'dependabot[bot]' }}
+      - name: Update the Application Client
+        if: github.ref == 'refs/heads/main' && github.actor != 'dependabot[bot]'
         run: ssh ${{env.ACM_XENON_REPO_USERNAME}}@acromere.com bin/update-acromere-wx-website-client
 
 #  server:
@@ -144,7 +144,7 @@ jobs:
 #          mvn ${{env.MAVEN_PARMS}} deploy -Dmaven.test.skip=true
 #
 #      - name: Deploy to Xenon Repo
-#        if: ${{ github.actor != 'dependabot[bot]' }}
+#        if: github.ref == 'refs/heads/main' && github.actor != 'dependabot[bot]'
 #        run: |
 #          ssh -t ${{env.ACM_XENON_REPO_USERNAME}}@acromere.com "mkdir -p ${{env.PRODUCT_DEPLOY_PATH}};"
 #          if [ $? -ne 0 ]; then exit 1; fi
