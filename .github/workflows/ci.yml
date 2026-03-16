@@ -72,7 +72,7 @@ jobs:
           cd dist
           zip -r ../client.zip *
 
-      - name: Copy Client ZIP
+      - name: Publish Client ZIP
         if: github.ref == 'refs/heads/main' && github.actor != 'dependabot[bot]'
         run: |
           ssh -t ${{env.ACM_XENON_REPO_USERNAME}}@acromere.com "mkdir -p ${{env.PRODUCT_DEPLOY_PATH}};"
