@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>4.0.3</version>
+		<relativePath /> <!-- lookup parent from repository -->
+	</parent>
+
+	<groupId>com.acromere.wx</groupId>
+	<artifactId>server</artifactId>
+	<version>4.0.0</version>
+	<packaging>jar</packaging>
+
+	<description>Acromere weather data server</description>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>17</java.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.shredzone.commons</groupId>
+			<artifactId>commons-suncalc</artifactId>
+			<version>3.7</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<sourceDirectory>server/main/java</sourceDirectory>
+		<testSourceDirectory>server/test/java</testSourceDirectory>
+
+		<resources>
+			<resource>
+				<directory>server/main/resources</directory>
+				<excludes>
+					<exclude>**/*.yml</exclude>
+					<exclude>**/*.yaml</exclude>
+					<exclude>**/*.properties</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<directory>server/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/*.yml</include>
+					<include>**/*.yaml</include>
+					<include>**/*.properties</include>
+				</includes>
+			</resource>
+		</resources>
+
+		<testResources>
+			<testResource>
+				<directory>server/test/resources</directory>
+			</testResource>
+		</testResources>
+
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+	<repositories>
+		<repository>
+			<id>acm</id>
+			<name>Acromere Repository</name>
+			<url>https://repo.acromere.com/acm/</url>
+		</repository>
+	</repositories>
+
+	<distributionManagement>
+		<repository>
+			<id>acm-release</id>
+			<name>Acromere Release Repository</name>
+			<url>https://repo.avereon.com/acm-release/</url>
+		</repository>
+		<snapshotRepository>
+			<id>acm-snapshot</id>
+			<name>Acromere Snapshot Repository</name>
+			<url>https://repo.avereon.com/acm-snapshot/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+</project>
