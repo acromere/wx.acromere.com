@@ -8,7 +8,6 @@ export default function Clock() {
   const [ap, setAp] = useState('');
   const [dow, setDow] = useState('');
 
-
   const updateTime = () => {
     let timestamp = new Date();
     let yy = timestamp.getFullYear();
@@ -46,4 +45,5 @@ export default function Clock() {
       <div className="dow">{dow}</div>
     </div>
   )
+
 }
