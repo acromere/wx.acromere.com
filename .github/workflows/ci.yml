@@ -73,7 +73,7 @@ jobs:
           zip -r ../client.zip *
 
       - name: Copy Client ZIP
-        if: ${{ github.actor != 'dependabot[bot]' }}
+        if: github.ref == 'refs/heads/main' && github.actor != 'dependabot[bot]'
         run: |
           ssh -t ${{env.ACM_XENON_REPO_USERNAME}}@acromere.com "mkdir -p ${{env.PRODUCT_DEPLOY_PATH}};"
           if [ $? -ne 0 ]; then exit 1; fi
