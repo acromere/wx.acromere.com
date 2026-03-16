@@ -1,0 +1,12 @@
+html{
+	background-color: #111;
+	color: #ddd;
+	height: 100%;
+	/*cursor: none;*/
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	font-family: sans-serif;
+}

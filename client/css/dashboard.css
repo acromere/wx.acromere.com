@@ -1,0 +1,130 @@
+.buffer {
+	height: 7rem;
+}
+
+.weather {
+	text-align: center;
+}
+
+.weather .title {
+	background-color: #333;
+	color: #eee;
+	font-size: 2rem;
+	font-weight: bold;
+}
+
+.weather .subtitle {
+	background-color: #333;
+	color: #888;
+}
+
+.temperature {
+	color: inherit;
+}
+
+.temperature.header {
+	font-size: 4rem;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.temperature .unit {
+	color: #808080;
+	text-align: left;
+	vertical-align: super;
+	/* This should stay as 0.5em, and not use the rem unit */
+	font-size: 0.5em;
+}
+
+.wind {
+	color: #c0a0ff;
+}
+
+.humidity {
+	color: #c0ffc0;
+}
+
+.rain {
+	color: #c0ffff;
+}
+
+.stats {
+	font-size: 2rem;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.stats table {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.stats .label {
+	color: #808080;
+	text-align: left;
+	font-size: 1.5rem;
+}
+
+.stats .value {
+	text-align: right;
+}
+
+.stats .unit {
+	color: #808080;
+	text-align: left;
+	vertical-align: middle;
+	/* This should stay as 0.5em, and not use the rem unit */
+	font-size: 1rem;
+}
+
+.clock {
+	font-size: 6rem;
+	text-align: center;
+}
+
+.clock .time {
+	vertical-align: middle;
+}
+
+.clock .ampm {
+	color: #808080;
+	font-size: 3rem;
+}
+
+.clock .date {
+	color: #808080;
+	font-size: 2.5rem;
+}
+
+.clock .dow {
+	font-size: 3rem;
+}
+
+.flight-conditions {
+	text-align: center;
+}
+
+.flight-conditions .title {
+	background-color: #333;
+	color: #eee;
+	font-size: 2rem;
+	font-weight: bold;
+}
+
+.flight-conditions .subtitle {
+	background-color: #333;
+	color: #888;
+}
+
+.flight-conditions .summary {
+	font-size: 4rem;
+}
+
+.flight-conditions .reason {
+	font-size: 2rem;
+}
+
+.flight-conditions .time {
+	color: #808080;
+	font-size: 2.5rem;
+}

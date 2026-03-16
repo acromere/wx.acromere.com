@@ -1,15 +1,14 @@
-import { useState } from 'react'
-import reactLogo from './public/image/react.svg'
-import viteLogo from './public/image/vite.svg'
-import heroImg from './public/image/hero.png'
-import './App.css'
+import './css/app.css'
+import Header from "./Header.tsx";
+import Footer from "./Footer.tsx";
+import Dashboard from "./Dashboard.tsx";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-      <h1>Acromere Weather Website</h1>
+      <Header/>
+      <Dashboard/>
+      <Footer/>
     </>
   )
 }
