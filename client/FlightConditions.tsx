@@ -1,4 +1,5 @@
 import {ReactNode} from "react";
+import {toDatestamp} from "./Util.ts";
 
 export default function FlightConditions(props: any) {
 
@@ -8,6 +9,7 @@ export default function FlightConditions(props: any) {
   return (
     <div className='flight-conditions'>
       <div className='title'>Flight Conditions</div>
+      <div className='subtitle'>{toDatestamp(props.weather.timestamp)}</div>
       <div className='summary'>{summary}</div>
       <div className='reason'>
         {reasons.map((reason: string, index: number): ReactNode => (
