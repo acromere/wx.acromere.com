@@ -23,7 +23,7 @@ export default function Clock() {
     hh = hh % 12;
     hh = hh === 0 ? 12 : hh;
 
-    setTime(pad(hh, 2) + ':' + pad(mm, 2) + ':' + pad(ss, 2));
+    setTime(pad(hh, 2) + ':' + pad(mm, 2));
     setDate(pad(yy, 4) + '-' + pad(mo, 2) + '-' + pad(dd, 2));
     setAp(ap);
     setDow(dw);
