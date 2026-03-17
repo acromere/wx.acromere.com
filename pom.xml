@@ -44,6 +44,8 @@
 	</dependencies>
 
 	<build>
+		<finalName>server</finalName>
+
 		<sourceDirectory>server/main/java</sourceDirectory>
 		<testSourceDirectory>server/test/java</testSourceDirectory>
 
