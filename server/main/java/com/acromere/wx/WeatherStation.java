@@ -11,10 +11,9 @@ import java.util.TimeZone;
 
 @Getter
 @Setter
-@SuppressWarnings( "WeakerAccess" )
 public class WeatherStation {
 
-	private static final String DEGREE = "\u00B0";
+	private static final String DEGREE = "°";
 
 	// Weather station
 
@@ -126,6 +125,10 @@ public class WeatherStation {
 	private FlightCondition flightCondition;
 
 	public WeatherStation() {}
+
+	public WeatherStation( String id ) {
+		this.id = id;
+	}
 
 	public WeatherStation( String id, String name, double latitude, double longitude ) {
 		this.id = id;
