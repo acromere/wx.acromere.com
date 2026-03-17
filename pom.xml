@@ -96,12 +96,12 @@
 		<repository>
 			<id>acm-release</id>
 			<name>Acromere Release Repository</name>
-			<url>https://repo.avereon.com/acm-release/</url>
+			<url>https://repo.acromere.com/acm-release/</url>
 		</repository>
 		<snapshotRepository>
 			<id>acm-snapshot</id>
 			<name>Acromere Snapshot Repository</name>
-			<url>https://repo.avereon.com/acm-snapshot/</url>
+			<url>https://repo.acromere.com/acm-snapshot/</url>
 		</snapshotRepository>
 	</distributionManagement>
 
