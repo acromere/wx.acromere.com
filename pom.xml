@@ -27,6 +27,9 @@
 		<lombok.version>1.18.44</lombok.version>
 		<mapstruct.version>1.6.3</mapstruct.version>
 		<lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
+
+		<!-- To support Mockito agent in Surefire -->
+		<argLine/>
 	</properties>
 
 	<dependencies>
