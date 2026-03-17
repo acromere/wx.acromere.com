@@ -1,0 +1,11 @@
+[Unit]
+Description=acromere-wx
+After=syslog.target
+
+[Service]
+User=acm
+ExecStart=java -jar /opt/acm/web/wx.acromere.com/server/server.jar --server.port=5060
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target

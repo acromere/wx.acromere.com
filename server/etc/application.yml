@@ -1,0 +1,9 @@
+logging:
+  file:
+    name: acromere-wx.log
+    max-size: 100MB
+    max-history: 10
+  level:
+    com:
+      acromere:
+        wx: INFO
