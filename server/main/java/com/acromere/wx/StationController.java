@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClient;
+import tools.jackson.databind.ObjectMapper;
 
 import java.lang.invoke.MethodHandles;
 import java.util.Map;
@@ -13,41 +14,43 @@ import java.util.concurrent.ConcurrentHashMap;
 @RestController
 public class StationController {
 
-    private final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	private final Logger log = LoggerFactory.getLogger( MethodHandles.lookup().lookupClass() );
 
-    private final RestClient.Builder builder;
+	private final RestClient.Builder builder;
 
-    @Getter
-    private final Map<String, WeatherStation> stations = new ConcurrentHashMap<>();
+	private final ObjectMapper mapper;
 
-    public StationController(RestClient.Builder builder) {
-        this.builder = builder;
-    }
+	@Getter
+	private final Map<String, WeatherStation> stations = new ConcurrentHashMap<>();
 
-    @CrossOrigin(origins = "*")
-    @RequestMapping(method = RequestMethod.GET, path = "/station")
-    public @ResponseBody WeatherStation getStation(@RequestParam(value = "id") String id) {
-        WeatherStation station = stations.computeIfAbsent(id, this::initializeStation);
-        return updateStation(station);
-    }
+	public StationController( RestClient.Builder builder, ObjectMapper mapper ) {
+		this.builder = builder;
+		this.mapper = mapper;
+	}
 
-    private WeatherStation initializeStation(String id) {
-        log.info("Initialising station with id: {}", id);
+	@CrossOrigin( origins = "*" )
+	@RequestMapping( method = RequestMethod.GET, path = "/api/station" )
+	public @ResponseBody WeatherStation getStation( @RequestParam( value = "id" ) String id ) {
+		WeatherStation station = stations.computeIfAbsent( id, this::initializeStation );
+		return updateStation( station );
+	}
 
-        WeatherStation station = new WeatherStation(id);
+	private WeatherStation initializeStation( String id ) {
+		log.info( "Initialising station with id: {}", id );
 
-        // TODO Fill out the station information
+		WeatherStation station = new WeatherStation( id );
 
-        return station;
-    }
+		// TODO Fill out the station information
 
-    private WeatherStation updateStation(WeatherStation station) {
-        if (!station.isPolled()) return station;
+		return station;
+	}
 
-        NwsDataRequest nwsDataRequest = new NwsDataRequest(builder);
-        String observationData = nwsDataRequest.fetchObservation(station.getId());
+	private WeatherStation updateStation( WeatherStation station ) {
+		if( !station.isPolled() ) return station;
 
-        return station;
-    }
+		WeatherStation updatedStation = new NwsDataRequest( builder, mapper ).updateStation( station );
+
+		return updatedStation;
+	}
 
 }

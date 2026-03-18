@@ -20,7 +20,7 @@ public class StationControllerTest {
 
 	@Test
 	public void testGetWeatherInfo() throws Exception {
-		MvcResult result = mvc.perform( get( "/station?id=bluewing" ).contentType( MediaType.APPLICATION_JSON ) ).andExpect( status().isOk() ).andReturn();
+		MvcResult result = mvc.perform( get( "/api/station?id=KATL" ).contentType( MediaType.APPLICATION_JSON ) ).andExpect( status().isOk() ).andReturn();
 		System.out.println( result.getResponse().getContentAsString() );
 	}
 

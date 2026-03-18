@@ -14,7 +14,7 @@ public class WebSecurityConfiguration {
 	public SecurityFilterChain securityFilterChain( HttpSecurity http ) throws Exception {
 		http.authorizeHttpRequests( authorizeRequests -> authorizeRequests
 			// Allow public access to /station/**
-			.requestMatchers( "/station/**" ).permitAll()
+			.requestMatchers( "/api/**" ).permitAll()
 			// Require ADMIN role for /admin/**
 			//.requestMatchers( "/admin/**" ).hasRole( "ADMIN" )
 			// All other requests require authentication
