@@ -29,6 +29,8 @@ public class WeatherStation {
 
 	private long timestamp;
 
+	private boolean polled;
+
 	// Weather basics
 
 	// Weather basics
