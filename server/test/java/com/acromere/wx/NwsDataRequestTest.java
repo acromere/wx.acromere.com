@@ -28,7 +28,7 @@ public class NwsDataRequestTest {
 		// when
 		WeatherStation updatedStation = nwsDataRequest.updateStation( station );
 
-		System.out.println( updatedStation.toString() );
+		//System.out.println( updatedStation.toString() );
 
 		// then
 		assertThat( updatedStation.getId() ).isEqualTo( STATION_ID );

@@ -7,7 +7,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -15,13 +18,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class StationControllerTest {
 
+	private static final String STATION_ID = "KATL";
+
 	@Autowired
-	protected MockMvc mvc;
+	private MockMvc mvc;
+
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	@Test
 	public void testGetWeatherInfo() throws Exception {
-		MvcResult result = mvc.perform( get( "/api/station?id=KATL" ).contentType( MediaType.APPLICATION_JSON ) ).andExpect( status().isOk() ).andReturn();
-		System.out.println( result.getResponse().getContentAsString() );
+		// given
+
+		// when
+		MvcResult result = mvc.perform( get( "/api/station?id=" + STATION_ID ).contentType( MediaType.APPLICATION_JSON ) ).andExpect( status().isOk() ).andReturn();
+
+		// then
+		assertThat( result.getResponse().getStatus()).isEqualTo( 200 );
+		JsonNode root = objectMapper.readTree( result.getResponse().getContentAsString() );
+		assertThat( root ).isNotNull();
 	}
 
 }
