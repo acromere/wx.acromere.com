@@ -23,6 +23,8 @@ public class NwsDataRequest {
     public String fetchObservation(String stationId) {
         return restClient.get()
                 .uri(STATION_OBSERVATION, stationId)
+                .header("Accept", "application/geo+json")
+                .header("User-Agent", "(wx.acromere.com, contact@acromere.com)")
                 .retrieve()
                 .body(String.class);
     }
