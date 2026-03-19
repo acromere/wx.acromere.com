@@ -2,10 +2,10 @@ import {ApiService} from "./ApiService";
 
 export default class WeatherService extends ApiService {
 
-	URI = 'https://wx.acromere.com/api/station?id=HERUT';
+	URI = 'https://wx.acromere.com/api/station?id=';
 
-	fetchWeather(success) {
-		return fetch(this.URI, {
+	fetchWeather(stationId: string, success) {
+		return fetch(this.URI + stationId, {
 			headers: {
 				Accept: 'application/json',
 			},

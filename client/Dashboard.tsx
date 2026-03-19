@@ -7,13 +7,24 @@ import WeatherService from "./api/WeatherService.ts"
 
 export default function Dashboard() {
 
-  const [station, setstation] = useState({})
+  const [station, setStation] = useState({})
 
-  useEffect( () => {
-    // load station
-    new WeatherService().fetchWeather( (response) =>{
-      //
+  const updateStation = () => {
+    new WeatherService().fetchWeather('HERUT', (station) => {
+      setStation(station);
     })
+  }
+
+  useEffect(() => {
+    // Load the initial weather station data
+    updateStation();
+
+    // Start reload timer
+    let refreshTimer: NodeJS.Timeout = setInterval(updateStation, 60000);
+
+    return () => {
+      clearInterval(refreshTimer);
+    }
   }, [])
 
   return (

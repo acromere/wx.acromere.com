@@ -19,10 +19,6 @@
 }
 
 .temperature {
-	color: inherit;
-}
-
-.temperature.header {
 	font-size: 4rem;
 	text-align: center;
 	vertical-align: middle;
