@@ -31,10 +31,6 @@ public class WeatherStation {
 
 	private boolean polled;
 
-	// Weather basics
-
-	// Weather basics
-
 	// Basic weather measures
 	private double temperature;
 
@@ -59,10 +55,6 @@ public class WeatherStation {
 	private double rainTotalDaily;
 
 	private double rainRate;
-
-	// Avg, min, max and trends
-
-	// Avg, min, max and trend
 
 	// Avg, min, max and trends
 	private double temperatureTrend;
@@ -97,7 +89,7 @@ public class WeatherStation {
 
 	private double sunIllumination;
 
-	// Unit values.
+	// Unit values
 	private String temperatureUnit = DEGREE + "F";
 
 	private String humidityUnit = "%";
@@ -124,12 +116,15 @@ public class WeatherStation {
 
 	private String sunIlluminationUnit = "%";
 
-	private FlightCondition flightCondition;
+	private final FlightCondition flightCondition;
 
-	public WeatherStation() {}
+	@SuppressWarnings( "unused" )
+	public WeatherStation() {
+		this( null, null, 0, 0 );
+	}
 
 	public WeatherStation( String id ) {
-		this.id = id;
+		this( id, null, 0, 0 );
 	}
 
 	public WeatherStation( String id, String name, double latitude, double longitude ) {
@@ -195,6 +190,10 @@ public class WeatherStation {
 		this.setHumidityTrendUnit( that.getHumidityTrendUnit() );
 		this.setPressureTrendUnit( that.getPressureTrendUnit() );
 		this.setWindSpeedTrendUnit( that.getWindSpeedTrendUnit() );
+	}
+
+	public void updateExtendedValues() {
+		this.setFeelsLike( calcFeelsLike( getTemperature(), getWindSpeed(), getHumidity() ) );
 
 		// Using the sun altitude, calculate an illumination value
 		// Civil twilight is -6 degrees (https://en.wikipedia.org/wiki/Twilight)
@@ -203,7 +202,6 @@ public class WeatherStation {
 		this.setSunAltitude( sunAltitude );
 		this.setSunIllumination( sunAltitude <= 0 ? 0 : Math.sin( Math.toRadians( sunAltitude ) ) * 100 );
 
-		updateFlyingConditions();
 	}
 
 	private double calcFeelsLike( double temperature, double wind, double humidity ) {
@@ -238,7 +236,7 @@ public class WeatherStation {
 		return Math.max( t, heatIndex );
 	}
 
-	private void updateFlyingConditions() {
+	public void updateFlightConditions() {
 		getFlightCondition().reset();
 
 		Calendar calendar = Calendar.getInstance( TimeZone.getTimeZone( "America/Denver" ) );

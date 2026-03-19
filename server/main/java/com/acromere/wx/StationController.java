@@ -35,19 +35,14 @@ public class StationController {
 	}
 
 	private WeatherStation initializeStation( String id ) {
-		log.info( "Initialising station with id: {}", id );
-
-		WeatherStation station = new WeatherStation( id );
-
-		// TODO Fill out the station information
-
-		return station;
+		return new WeatherStation( id );
 	}
 
 	private WeatherStation updateStation( WeatherStation station ) {
-		//if( !station.isPolled() ) return station;
-
 		WeatherStation updatedStation = new NwsDataRequest( builder, mapper ).updateStation( station );
+
+		updatedStation.updateExtendedValues();
+		updatedStation.updateFlightConditions();
 
 		return updatedStation;
 	}
