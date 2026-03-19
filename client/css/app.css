@@ -124,6 +124,13 @@ body {
 	justify-self: center;
 }
 
+.content {
+	flex-grow: 1;
+
+	display: flex;
+	flex-flow: column nowrap;
+}
+
 .footer {
 	justify-self: center;
 }
