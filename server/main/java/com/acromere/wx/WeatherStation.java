@@ -48,6 +48,8 @@ public class WeatherStation {
 
 	private double windSpeed;
 
+	private double windGust;
+
 	private double windDirection;
 
 	private Cardinal windCardinal;
@@ -237,6 +239,34 @@ public class WeatherStation {
 	}
 
 	public void updateFlightConditions() {
+		getFlightCondition().reset();
+
+		double wind = getWindSpeed();
+		double gust = getWindGust();
+
+//		if( wind >= 20 ) {
+//			updateFlightCondition( FlightCondition.Summary.HOLD, FlightCondition.Reason.WINDY );
+//		} else if( wind >= 15 ) {
+//			updateFlightCondition( FlightCondition.Summary.POOR, FlightCondition.Reason.WINDY );
+//		} else if( wind >= 10 ) {
+//			updateFlightCondition( FlightCondition.Summary.FAIR, FlightCondition.Reason.BREEZY );
+//		} else if( wind >= 5 ) {
+//			updateFlightCondition( FlightCondition.Summary.GOOD, FlightCondition.Reason.BREEZY );
+//		} // otherwise GREAT
+//
+//		if( gust >= 30 ) {
+//			updateFlightCondition( FlightCondition.Summary.HOLD, FlightCondition.Reason.GUSTY );
+//		} else if( gust >= 20 ) {
+//			updateFlightCondition( FlightCondition.Summary.POOR, FlightCondition.Reason.GUSTY );
+//		} else if( gust >= 15 ) {
+//			updateFlightCondition( FlightCondition.Summary.FAIR, FlightCondition.Reason.BUMPY );
+//		} else if( gust >= 10 ) {
+//			updateFlightCondition( FlightCondition.Summary.GOOD, FlightCondition.Reason.BUMPY );
+//		} // otherwise GREAT
+
+	}
+
+	public void updateFlightConditionsImperial() {
 		getFlightCondition().reset();
 
 		Calendar calendar = Calendar.getInstance( TimeZone.getTimeZone( "America/Denver" ) );

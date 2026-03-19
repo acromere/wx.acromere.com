@@ -63,7 +63,7 @@ public class NwsDataRequest {
 		station.setWindDirectionUnit( Unit.DEGREE );
 		station.setWindSpeed( windSpeed );
 		station.setWindSpeedUnit( Unit.KPH );
-		station.setWindTenMinMax(  windGust );
+		station.setWindGust( windGust );
 		station.setHumidity( humidity );
 		station.setHumidityUnit( Unit.PERCENT );
 		station.setPressure( pressure );
