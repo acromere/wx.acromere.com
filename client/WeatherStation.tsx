@@ -4,11 +4,11 @@ import Temperature from "./Temperature.tsx";
 export default function WeatherStation(props:any) {
 
   return (
-    <div className='weather'>
-      <div className='title'>{props.weather.name} Station</div>
-      <div className='subtitle'>{toDatestamp(props.weather.timestamp)}</div>
-      <Temperature weather={props.weather}/>
-      {/*<Stats weather={props.weather}/>*/}
+    <div className='station'>
+      <div className='title'>{props.station.name} Station</div>
+      <div className='subtitle'>{toDatestamp(props.station.timestamp)}</div>
+      <Temperature weather={props.station}/>
+      {/*<Stats weather={props.station}/>*/}
     </div>
   )
 }

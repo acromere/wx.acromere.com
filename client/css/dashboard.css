@@ -2,18 +2,18 @@
 	height: 7rem;
 }
 
-.weather {
+.station {
 	text-align: center;
 }
 
-.weather .title {
+.station .title {
 	background-color: #333;
 	color: #eee;
 	font-size: 2rem;
 	font-weight: bold;
 }
 
-.weather .subtitle {
+.station .subtitle {
 	background-color: #333;
 	color: #888;
 }

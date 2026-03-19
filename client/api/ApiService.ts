@@ -1,10 +1,10 @@
 export class ApiService {
 
-  constructor() {
-    // React bindings
-    this.checkStatus = this.checkStatus.bind(this);
-    this.parseJSON = this.parseJSON.bind(this);
-  }
+  // constructor() {
+  //   // React bindings
+  //   this.checkStatus = this.checkStatus.bind(this);
+  //   this.parseJSON = this.parseJSON.bind(this);
+  // }
 
   checkStatus(response) {
     if (response.status >= 200 && response.status < 300) {
