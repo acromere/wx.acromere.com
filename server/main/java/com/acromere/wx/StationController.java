@@ -31,8 +31,7 @@ public class StationController {
 	@CrossOrigin( origins = "*" )
 	@RequestMapping( method = RequestMethod.GET, path = "/api/station" )
 	public @ResponseBody WeatherStation getStation( @RequestParam( value = "id" ) String id ) {
-		WeatherStation station = stations.computeIfAbsent( id, this::initializeStation );
-		return updateStation( station );
+		return updateStation( stations.computeIfAbsent( id, this::initializeStation ) );
 	}
 
 	private WeatherStation initializeStation( String id ) {
@@ -46,7 +45,7 @@ public class StationController {
 	}
 
 	private WeatherStation updateStation( WeatherStation station ) {
-		if( !station.isPolled() ) return station;
+		//if( !station.isPolled() ) return station;
 
 		WeatherStation updatedStation = new NwsDataRequest( builder, mapper ).updateStation( station );
 
