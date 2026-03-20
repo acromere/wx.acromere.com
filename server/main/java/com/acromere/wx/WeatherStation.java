@@ -215,6 +215,12 @@ public class WeatherStation {
 		return temperature;
 	}
 
+	public static double calculateWindChill( double t, double w ) {
+		if( w <= 5 || t >= 5 ) return t;
+		double windCoeff = Math.pow( w, 0.16 );
+		return 13.12 + 0.6215 * t - 11.36 * windCoeff + 0.3965 * t * windCoeff;
+	}
+
 	public static double calculateWindChillImperial( double t, double w ) {
 		if( w <= 3 || t >= 50 ) return t;
 
