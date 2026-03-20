@@ -14,7 +14,7 @@ public class WeatherStationTest {
 	@ParameterizedTest
 	@MethodSource( "heatIndexValues" )
 	void testCalcHeatIndex( double temperature, double humidity, double heatIndex ) {
-		assertThat( WeatherStation.calculateHeatIndex( temperature, humidity ) ).isCloseTo( heatIndex, Offset.offset( 0.5 ) );
+		assertThat( WeatherStation.calculateHeatIndexImperial( temperature, humidity ) ).isCloseTo( heatIndex, Offset.offset( 0.5 ) );
 	}
 
 	// These values come from the NOAA table of values at: https://en.wikipedia.org/wiki/Heat_index

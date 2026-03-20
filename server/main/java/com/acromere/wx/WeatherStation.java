@@ -4,10 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.shredzone.commons.suncalc.SunPosition;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
-import java.util.TimeZone;
 
 @Getter
 @Setter
@@ -165,7 +163,7 @@ public class WeatherStation {
 		this.setDewPoint( that.getDewPoint() );
 		this.setWindChill( that.getWindChill() );
 		this.setHeatIndex( that.getHeatIndex() );
-		this.setFeelsLike( calcFeelsLike( that.getTemperature(), that.getWindTenMinAvg(), that.getHumidity() ) );
+		this.setFeelsLike( calcFeelsLikeImperial( that.getTemperature(), that.getWindTenMinAvg(), that.getHumidity() ) );
 		this.setWindSpeed( that.getWindSpeed() );
 		this.setWindDirection( that.getWindDirection() );
 		this.setRainTotalDaily( that.getRainTotalDaily() );
@@ -199,7 +197,7 @@ public class WeatherStation {
 	}
 
 	public void updateExtendedValues() {
-		this.setFeelsLike( calcFeelsLike( getTemperature(), getWindSpeed(), getHumidity() ) );
+		this.setFeelsLike( calcFeelsLikeImperial( getTemperature(), getWindSpeed(), getHumidity() ) );
 
 		// Using the sun altitude, calculate an illumination value
 		// Civil twilight is -6 degrees (https://en.wikipedia.org/wiki/Twilight)
@@ -210,19 +208,20 @@ public class WeatherStation {
 		this.setPostMeridian( position.getAzimuth() > 180.0 );
 	}
 
-	private double calcFeelsLike( double temperature, double wind, double humidity ) {
-		if( temperature < 50 ) return calculateWindChill( temperature, wind );
-		if( temperature > 80 ) return calculateHeatIndex( temperature, humidity );
+	// FIXME Feels like calculation is based on imperial numbers
+	private double calcFeelsLikeImperial( double temperature, double wind, double humidity ) {
+		if( temperature < 50 ) return calculateWindChillImperial( temperature, wind );
+		if( temperature > 80 ) return calculateHeatIndexImperial( temperature, humidity );
 		return temperature;
 	}
 
-	public static double calculateWindChill( double t, double w ) {
+	public static double calculateWindChillImperial( double t, double w ) {
 		if( w <= 3 || t >= 50 ) return t;
 
 		return 35.74f + 0.6215f * t - 35.75f * Math.pow( w, 0.16 ) + 0.4275f * t * Math.pow( w, 0.16 );
 	}
 
-	public static double calculateHeatIndex( double t, double h ) {
+	public static double calculateHeatIndexImperial( double t, double h ) {
 		if( t < 80 || h < 40 ) return t;
 
 		double c1 = -42.379;
