@@ -8,7 +8,6 @@ export default function WeatherStation(props:any) {
     <div className='station'>
       <div className='title'>{props.station.name}</div>
       <div className='subtitle'>{toDatestamp(props.station.timestamp)}</div>
-      <Temperature station={props.station}/>
       <Stats station={props.station}/>
     </div>
   )

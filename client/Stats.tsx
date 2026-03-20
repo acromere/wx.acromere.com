@@ -1,3 +1,5 @@
+import Temperature from "./Temperature.tsx";
+
 export default function Stats(props: any) {
 
   const windSpeed = parseFloat(props.station.windSpeed)
@@ -14,6 +16,7 @@ export default function Stats(props: any) {
 
   return (
     <div className="stats">
+      <Temperature station={props.station}/>
       <table>
         <tbody>
         <tr className="stats">
