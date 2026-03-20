@@ -163,7 +163,7 @@ public class WeatherStation {
 		this.setDewPoint( that.getDewPoint() );
 		this.setWindChill( that.getWindChill() );
 		this.setHeatIndex( that.getHeatIndex() );
-		this.setFeelsLike( calcFeelsLikeImperial( that.getTemperature(), that.getWindTenMinAvg(), that.getHumidity() ) );
+		this.setFeelsLike( calcFeelsLike( that.getTemperature(), that.getWindTenMinAvg(), that.getHumidity() ) );
 		this.setWindSpeed( that.getWindSpeed() );
 		this.setWindDirection( that.getWindDirection() );
 		this.setRainTotalDaily( that.getRainTotalDaily() );
@@ -197,7 +197,7 @@ public class WeatherStation {
 	}
 
 	public void updateExtendedValues() {
-		this.setFeelsLike( calcFeelsLikeImperial( getTemperature(), getWindSpeed(), getHumidity() ) );
+		this.setFeelsLike( calcFeelsLike( getTemperature(), getWindSpeed(), getHumidity() ) );
 
 		// Using the sun altitude, calculate an illumination value
 		// Civil twilight is -6 degrees (https://en.wikipedia.org/wiki/Twilight)
@@ -208,10 +208,9 @@ public class WeatherStation {
 		this.setPostMeridian( position.getAzimuth() > 180.0 );
 	}
 
-	// FIXME Feels like calculation is based on imperial numbers
-	private double calcFeelsLikeImperial( double temperature, double wind, double humidity ) {
-		if( temperature < 50 ) return calculateWindChillImperial( temperature, wind );
-		if( temperature > 80 ) return calculateHeatIndexImperial( temperature, humidity );
+	private double calcFeelsLike( double temperature, double wind, double humidity ) {
+		if( temperature <= 10 ) return calculateWindChill( temperature, wind );
+		if( temperature >= 27 ) return calculateHeatIndex( temperature, humidity );
 		return temperature;
 	}
 
@@ -219,6 +218,17 @@ public class WeatherStation {
 		if( w <= 5 || t >= 5 ) return t;
 		double windCoeff = Math.pow( w, 0.16 );
 		return 13.12 + 0.6215 * t - 11.36 * windCoeff + 0.3965 * t * windCoeff;
+	}
+
+	public static double calculateHeatIndex( double t, double h ) {
+		if( t < 27 || h < 40 ) return t;
+		return calculateHeatIndexImperial( t * 9.0 / 5.0 + 32.0, h ) * (5.0 / 9.0) - 32.0 * (5.0 / 9.0);
+	}
+
+	private double calcFeelsLikeImperial( double temperature, double wind, double humidity ) {
+		if( temperature < 50 ) return calculateWindChillImperial( temperature, wind );
+		if( temperature > 80 ) return calculateHeatIndexImperial( temperature, humidity );
+		return temperature;
 	}
 
 	public static double calculateWindChillImperial( double t, double w ) {
