@@ -25,6 +25,8 @@ public class WeatherStation {
 
 	private double longitude;
 
+	private double elevation;
+
 	private String serverVersion;
 
 	private long timestamp;

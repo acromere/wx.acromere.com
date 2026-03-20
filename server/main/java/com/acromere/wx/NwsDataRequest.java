@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestClient;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ArrayNode;
 
 import java.lang.invoke.MethodHandles;
 import java.time.Instant;
@@ -40,8 +41,12 @@ public class NwsDataRequest {
 		System.out.println( data );
 
 		// Parse the weather data
-		JsonNode node = mapper.readTree( data );
-		JsonNode properties = node.get( "properties" );
+		JsonNode root = mapper.readTree( data );
+		JsonNode geometry = root.get( "geometry" );
+		JsonNode properties = root.get( "properties" );
+		ArrayNode coordinates = geometry.withArray( "coordinates" );
+		coordinates.get( 0 ).asDouble();
+
 		String id = properties.get( "stationId" ).asString( "" );
 		String name = properties.get( "stationName" ).asString( "" );
 		String timestamp = properties.get( "timestamp" ).asString( "" );
@@ -52,6 +57,10 @@ public class NwsDataRequest {
 		double windGust = getSpeed( properties.get( "windGust" ) );
 		double humidity = getHumidity( properties.get( "relativeHumidity" ) );
 		double pressure = getPressure( properties.get( "barometricPressure" ) );
+
+		double longitude = coordinates.get( 0 ).asDouble();
+		double latitude = coordinates.get( 1 ).asDouble();
+		double elevation = getDistance( properties.get( "elevation" ) );
 
 		if( !station.getId().equals( id ) ) log.warn( "Station id mismatch: {} != {}", station.getId(), id );
 		station.setName( name );
@@ -68,6 +77,10 @@ public class NwsDataRequest {
 		station.setHumidityUnit( Unit.PERCENT );
 		station.setPressure( pressure );
 		station.setPressureUnit( Unit.PASCAL );
+
+		station.setLatitude( latitude );
+		station.setLongitude( longitude );
+		station.setElevation( elevation );
 
 		return station;
 	}
@@ -133,6 +146,29 @@ public class NwsDataRequest {
 		}
 
 		return value * scale;
+	}
+
+	double getDistance( JsonNode node ) {
+		String unit = node.get( "unitCode" ).asString();
+		double value = node.get( "value" ).asDouble();
+
+		double scale;
+		if( unit.endsWith( "m" ) ) {
+			scale = 1.0;
+		} else if( unit.endsWith( "ft" ) ) {
+			scale = 0.3048;
+		} else {
+			scale = 0.0;
+		}
+
+		return value * scale;
+	}
+
+	double getAngle( JsonNode node ) {
+		String unit = node.get( "unitCode" ).asString();
+		double value = node.get( "value" ).asDouble();
+
+		return value;
 	}
 
 }
