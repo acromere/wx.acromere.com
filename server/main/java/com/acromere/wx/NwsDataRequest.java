@@ -9,7 +9,6 @@ import tools.jackson.databind.node.ArrayNode;
 
 import java.lang.invoke.MethodHandles;
 import java.time.Instant;
-import java.util.OptionalDouble;
 
 /**
  * Represents a request for weather data from the National Weather Service
@@ -53,7 +52,7 @@ public class NwsDataRequest {
 		String timestamp = properties.get( "timestamp" ).asString( "" );
 		double temperature = getTemperature( properties.get( "temperature" ) );
 		double dewPoint = getTemperature( properties.get( "dewpoint" ) );
-		double windDirection = getDirection( properties.get( "windDirection" ) );
+		double windDirection = getAngle( properties.get( "windDirection" ) );
 		double windSpeed = getSpeed( properties.get( "windSpeed" ) );
 		double windGust = getSpeed( properties.get( "windGust" ) );
 		double humidity = getHumidity( properties.get( "relativeHumidity" ) );
@@ -97,6 +96,9 @@ public class NwsDataRequest {
 	}
 
 	double getTemperature( JsonNode node ) {
+		String quality = node.get( "qualityControl" ).asString();
+		if( "Z".equals( quality ) ) return Double.NaN;
+
 		String unit = node.get( "unitCode" ).asString();
 		double value = node.get( "value" ).asDouble();
 
@@ -113,13 +115,9 @@ public class NwsDataRequest {
 	}
 
 	double getHumidity( JsonNode node ) {
-		String unit = node.get( "unitCode" ).asString();
-		double value = node.get( "value" ).asDouble();
+		String quality = node.get( "qualityControl" ).asString();
+		if( "Z".equals( quality ) ) return Double.NaN;
 
-		return value;
-	}
-
-	double getDirection( JsonNode node ) {
 		String unit = node.get( "unitCode" ).asString();
 		double value = node.get( "value" ).asDouble();
 
@@ -127,6 +125,9 @@ public class NwsDataRequest {
 	}
 
 	double getPressure( JsonNode node ) {
+		String quality = node.get( "qualityControl" ).asString();
+		if( "Z".equals( quality ) ) return Double.NaN;
+
 		String unit = node.get( "unitCode" ).asString();
 		double value = node.get( "value" ).asDouble();
 
@@ -134,28 +135,27 @@ public class NwsDataRequest {
 	}
 
 	double getSpeed( JsonNode node ) {
-		String unit = node.get( "unitCode" ).asString();
-		OptionalDouble value = node.get( "value" ).asDoubleOpt();
 		String quality = node.get( "qualityControl" ).asString();
+		if( "Z".equals( quality ) ) return Double.NaN;
 
-		if( "Z".equals( quality) ) return -1;
+		String unit = node.get( "unitCode" ).asString();
+		double value = node.get( "value" ).asDouble();
 
-		if( value.isPresent() ) {
-			double scale;
-			if( unit.endsWith( "km_h-1" ) ) {
-				scale = 1.0;
-			} else if( unit.endsWith( "mi_h-1" ) ) {
-				scale = 0.621371;
-			} else {
-				scale = 0.0;
-			}
-			return value.getAsDouble() * scale;
+		double scale;
+		if( unit.endsWith( "km_h-1" ) ) {
+			scale = 1.0;
+		} else if( unit.endsWith( "mi_h-1" ) ) {
+			scale = 0.621371;
 		} else {
-			return -1;
+			scale = 0.0;
 		}
+		return value * scale;
 	}
 
 	double getDistance( JsonNode node ) {
+		String quality = node.get( "qualityControl" ).asString();
+		if( "Z".equals( quality ) ) return Double.NaN;
+
 		String unit = node.get( "unitCode" ).asString();
 		double value = node.get( "value" ).asDouble();
 
@@ -172,6 +172,9 @@ public class NwsDataRequest {
 	}
 
 	double getAngle( JsonNode node ) {
+		String quality = node.get( "qualityControl" ).asString();
+		if( "Z".equals( quality ) ) return Double.NaN;
+
 		String unit = node.get( "unitCode" ).asString();
 		double value = node.get( "value" ).asDouble();
 
