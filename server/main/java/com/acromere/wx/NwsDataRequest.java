@@ -9,6 +9,7 @@ import tools.jackson.databind.node.ArrayNode;
 
 import java.lang.invoke.MethodHandles;
 import java.time.Instant;
+import java.util.OptionalDouble;
 
 /**
  * Represents a request for weather data from the National Weather Service
@@ -134,18 +135,24 @@ public class NwsDataRequest {
 
 	double getSpeed( JsonNode node ) {
 		String unit = node.get( "unitCode" ).asString();
-		double value = node.get( "value" ).asDouble();
+		OptionalDouble value = node.get( "value" ).asDoubleOpt();
+		String quality = node.get( "qualityControl" ).asString();
 
-		double scale;
-		if( unit.endsWith( "km_h-1" ) ) {
-			scale = 1.0;
-		} else if( unit.endsWith( "mi_h-1" ) ) {
-			scale = 0.621371;
+		if( "Z".equals( quality) ) return -1;
+
+		if( value.isPresent() ) {
+			double scale;
+			if( unit.endsWith( "km_h-1" ) ) {
+				scale = 1.0;
+			} else if( unit.endsWith( "mi_h-1" ) ) {
+				scale = 0.621371;
+			} else {
+				scale = 0.0;
+			}
+			return value.getAsDouble() * scale;
 		} else {
-			scale = 0.0;
+			return -1;
 		}
-
-		return value * scale;
 	}
 
 	double getDistance( JsonNode node ) {
