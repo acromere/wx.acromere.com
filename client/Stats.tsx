@@ -1,10 +1,10 @@
-export default function Stats(props:any) {
+export default function Stats(props: any) {
 
   const windSpeed = parseFloat(props.station.windSpeed)
   const gustSpeed = parseFloat(props.station.windGust)
 
-  const windSpeedText:string = windSpeed.toFixed(1);
-  const gustSpeedText:string = gustSpeed < 0.0 ? '---' : gustSpeed.toFixed(1);
+  const windSpeedText: string = windSpeed.toFixed(1);
+  const gustSpeedText: string = Number.isNaN(gustSpeed) ? '---' : gustSpeed.toFixed(1);
   const windCardinal = windSpeed < 0.1 ? "---" : props.station.windCardinal;
   const windDirection = windSpeed < 0.1 ? "---" : parseFloat(props.station.windDirection).toFixed(0);
   const humidity = parseFloat(props.station.humidity).toFixed(0);
@@ -17,7 +17,7 @@ export default function Stats(props:any) {
       <table>
         <tbody>
         <tr className="stats">
-          <td className="label">feel </td>
+          <td className="label">feel</td>
           <td className="value">{feelsLike}</td>
           <td className="unit">{tempUnit}</td>
         </tr>
