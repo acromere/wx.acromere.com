@@ -140,6 +140,7 @@ jobs:
           mvn ${{env.MAVEN_PARMS}} test
 
       - name: Deploy to Maven Repo
+        if: github.ref == 'refs/heads/main' && github.actor != 'dependabot[bot]'
         run: |
           mvn ${{env.MAVEN_PARMS}} deploy -Dmaven.test.skip=true
 
