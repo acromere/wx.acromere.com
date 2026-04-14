@@ -30,7 +30,7 @@ export default function Clock() {
     setDate(pad(yy, 4) + '-' + pad(mo, 2) + '-' + pad(dd, 2));
     setAp(ap);
     setDow(dw);
-    setZulu(utcHh + utcMm + "Z");
+    setZulu(pad(utcHh,2) + pad(utcMm,2) + "Z");
   };
 
   useEffect(() => {
