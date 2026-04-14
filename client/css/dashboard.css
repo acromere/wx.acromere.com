@@ -96,6 +96,11 @@
 	font-size: 3rem;
 }
 
+.clock .zulu {
+	color: #808080;
+	font-size: 2.5rem;
+}
+
 .flight-conditions {
 	text-align: center;
 }
