@@ -18,7 +18,7 @@ import java.time.Instant;
  * <a href="https://www.weather.gov/documentation/services-web-api">weather.gov API</a>
  *
  */
-public class NwsDataRequest implements StationUpdateRequest{
+public class NwsDataRequest implements StationUpdateRequest {
 
 	private final Logger log = LoggerFactory.getLogger( MethodHandles.lookup().lookupClass() );
 

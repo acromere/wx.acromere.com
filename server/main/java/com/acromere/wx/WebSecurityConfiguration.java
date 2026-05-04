@@ -18,8 +18,7 @@ public class WebSecurityConfiguration {
 			// Require ADMIN role for /admin/**
 			//.requestMatchers( "/admin/**" ).hasRole( "ADMIN" )
 			// All other requests require authentication
-			.anyRequest().authenticated()
-		).httpBasic( withDefaults() ); // Use default HTTP Basic authentication
+			.anyRequest().authenticated() ).httpBasic( withDefaults() ); // Use default HTTP Basic authentication
 
 		return http.build();
 	}

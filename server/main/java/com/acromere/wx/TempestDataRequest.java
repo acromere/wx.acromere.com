@@ -3,7 +3,7 @@ package com.acromere.wx;
 import org.springframework.web.client.RestClient;
 import tools.jackson.databind.ObjectMapper;
 
-public class TempestDataRequest implements StationUpdateRequest{
+public class TempestDataRequest implements StationUpdateRequest {
 
 	private static final String BASE_URL = "";
 
