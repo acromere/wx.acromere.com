@@ -7,7 +7,9 @@ import WeatherService from "./api/WeatherService.ts"
 
 export default function Dashboard() {
 
-  const DEFAULT_STATION_ID = 'HERUT'
+  const DEFAULT_TEMPEST_STATION_ID = '215817'
+
+  const DEFAULT_NWS_STATION_ID = 'HERUT'
 
   const [station, setStation] = useState({})
 
@@ -15,11 +17,11 @@ export default function Dashboard() {
     const queryString: string = window.location.search;
     const params = new URLSearchParams(queryString);
     let stationId: string = params.get('id')
-    if (stationId === null) stationId = DEFAULT_STATION_ID
+    if (stationId === null) stationId = DEFAULT_NWS_STATION_ID
 
     console.log("Station ID=" + stationId);
 
-    new WeatherService().fetchWeather(stationId, (station: any): void => {
+    new WeatherService().fetchNwsWeather(stationId, (station: any): void => {
       setStation(station);
     }).then()
   }
