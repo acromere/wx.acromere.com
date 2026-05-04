@@ -9,7 +9,7 @@ import tools.jackson.databind.ObjectMapper;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-public class NwsDataRequestTest {
+public class NwsApiServiceTest {
 
 	private static final String STATION_ID = "HERUT";
 
@@ -23,10 +23,10 @@ public class NwsDataRequestTest {
 	void testFetchObservation() {
 		// given
 		WeatherStation station = new WeatherStation( STATION_ID );
-		NwsDataRequest nwsDataRequest = new NwsDataRequest( builder, mapper );
+		NwsApiService nwsApiService = new NwsApiService( builder, mapper );
 
 		// when
-		WeatherStation updatedStation = nwsDataRequest.updateStation( station );
+		WeatherStation updatedStation = nwsApiService.updateStation( station );
 
 		//System.out.println( updatedStation.toString() );
 

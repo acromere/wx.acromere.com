@@ -1,0 +1,3 @@
+security:
+  tempest:
+    pat: not-specified

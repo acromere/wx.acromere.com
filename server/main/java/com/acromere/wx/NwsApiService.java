@@ -11,14 +11,14 @@ import java.lang.invoke.MethodHandles;
 import java.time.Instant;
 
 /**
- * Represents a request for weather data from the National Weather Service
+ * Represents a client for weather data from the National Weather Service
  * (NWS). The NWS provides an <a href="https://www.weather.gov/documentation/services-web-api">API Web Service</a>
  * to request weather data:
  * <p>
  * <a href="https://www.weather.gov/documentation/services-web-api">weather.gov API</a>
  *
  */
-public class NwsDataRequest implements StationUpdateRequest {
+public class NwsApiService implements StationUpdateRequest {
 
 	private final Logger log = LoggerFactory.getLogger( MethodHandles.lookup().lookupClass() );
 
@@ -30,7 +30,7 @@ public class NwsDataRequest implements StationUpdateRequest {
 
 	public static final String STATION_OBSERVATION = "/stations/{stationId}/observations/latest";
 
-	public NwsDataRequest( RestClient.Builder builder, ObjectMapper mapper ) {
+	public NwsApiService( RestClient.Builder builder, ObjectMapper mapper ) {
 		this.restClient = builder.baseUrl( BASE_URL ).build();
 		this.mapper = mapper;
 	}

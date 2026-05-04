@@ -4,8 +4,6 @@ import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestClient;
-import tools.jackson.databind.ObjectMapper;
 
 import java.lang.invoke.MethodHandles;
 import java.util.Map;
@@ -16,34 +14,28 @@ public class StationController {
 
 	private final Logger log = LoggerFactory.getLogger( MethodHandles.lookup().lookupClass() );
 
-	private final RestClient.Builder builder;
+	private final NwsApiService nwsApiService;
 
-	private final ObjectMapper mapper;
+	private final TempestApiService tempestApiService;
 
 	@Getter
 	private final Map<String, WeatherStation> stations = new ConcurrentHashMap<>();
 
-	public StationController( RestClient.Builder builder, ObjectMapper mapper ) {
-		this.builder = builder;
-		this.mapper = mapper;
-	}
-
-	@CrossOrigin( origins = "*" )
-	@RequestMapping( method = RequestMethod.GET, path = "/api/station" )
-	public @ResponseBody WeatherStation getStation( @RequestParam( value = "id" ) String id ) {
-		return updateStation( id, new NwsDataRequest( builder, mapper ) );
+	public StationController( NwsApiService nwsApiService, TempestApiService tempestApiService ) {
+		this.nwsApiService = nwsApiService;
+		this.tempestApiService = tempestApiService;
 	}
 
 	@CrossOrigin( origins = "*" )
 	@RequestMapping( method = RequestMethod.GET, path = "/api/station/nws" )
 	public @ResponseBody WeatherStation getNoaaStation( @RequestParam( value = "id" ) String id ) {
-		return updateStation( id, new NwsDataRequest( builder, mapper ) );
+		return updateStation( id, nwsApiService );
 	}
 
 	@CrossOrigin( origins = "*" )
 	@RequestMapping( method = RequestMethod.GET, path = "/api/station/tempest" )
 	public @ResponseBody WeatherStation getTempestStation( @RequestParam( value = "id" ) String id ) {
-		return updateStation( id, new TempestDataRequest( builder, mapper ) );
+		return updateStation( id, tempestApiService );
 	}
 
 	private WeatherStation updateStation( String id, StationUpdateRequest request ) {
@@ -55,4 +47,5 @@ public class StationController {
 
 		return station;
 	}
+
 }

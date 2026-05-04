@@ -1,9 +1,12 @@
 package com.acromere.wx;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import tools.jackson.databind.ObjectMapper;
 
-public class TempestDataRequest implements StationUpdateRequest {
+@Service
+public class TempestApiService implements StationUpdateRequest {
 
 	private static final String BASE_URL = "";
 
@@ -11,7 +14,11 @@ public class TempestDataRequest implements StationUpdateRequest {
 
 	private ObjectMapper mapper;
 
-	public TempestDataRequest( RestClient.Builder builder, ObjectMapper mapper ) {
+	private String clientId;
+
+	private @Value( "${security.tempest.pat:}" ) String clientSecret;
+
+	public TempestApiService( RestClient.Builder builder, ObjectMapper mapper ) {
 		this.restClient = builder.baseUrl( BASE_URL ).build();
 		this.mapper = mapper;
 	}
