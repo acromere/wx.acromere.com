@@ -1,9 +1,18 @@
 package com.acromere.wx;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
+import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ArrayNode;
+
+import java.lang.invoke.MethodHandles;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 /**
  * The <a href="https://weatherflow.github.io/Tempest/api/">Tempest Weather Station API</a> service.
@@ -14,6 +23,8 @@ public class TempestApiService implements StationUpdateRequest {
 	public static final String BASE_URL = "https://swd.weatherflow.com/swd/rest";
 
 	public static final String STATION_OBSERVATION = BASE_URL + "/observations/station/{stationId}?token={accessToken}";
+
+	private final Logger log = LoggerFactory.getLogger( MethodHandles.lookup().lookupClass() );
 
 	private final RestClient restClient;
 
@@ -32,13 +43,58 @@ public class TempestApiService implements StationUpdateRequest {
 		System.out.println( "Updating station " + station.getId() );
 		System.out.println( "Access token: " + accessToken );
 
-		//String data = fetchObservation( station.getId() );
+		String data = fetchObservation( station.getId() );
 
 		//System.out.println( data );
-		// {"status":{"status_code":0,"status_message":"SUCCESS"},"elevation":1476.9608154296875,"is_public":true,"latitude":40.50388,"longitude":-112.01338,"obs":[{"air_density":1.04391,"air_temperature":9.3,"barometric_pressure":846.4,"brightness":9035,"delta_t":2.8,"dew_point":3.9,"feels_like":8.4,"heat_index":9.3,"lightning_strike_count":0,"lightning_strike_count_last_1hr":0,"lightning_strike_count_last_3hr":0,"lightning_strike_last_distance":27,"lightning_strike_last_epoch":1777930262,"precip":0.0,"precip_accum_last_1hr":0.0,"precip_accum_local_day":0.0,"precip_accum_local_day_final":0.0,"precip_accum_local_yesterday":0.360797,"precip_accum_local_yesterday_final":0.360797,"precip_analysis_type_yesterday":1,"precip_minutes_local_day":0,"precip_minutes_local_yesterday":46,"precip_minutes_local_yesterday_final":46,"pressure_trend":"rising","relative_humidity":69,"sea_level_pressure":1011.7,"solar_radiation":76,"station_pressure":846.4,"timestamp":1777998046,"uv":0.58,"wet_bulb_globe_temperature":7.5,"wet_bulb_temperature":6.5,"wind_avg":2.0,"wind_chill":8.4,"wind_direction":179,"wind_gust":2.8,"wind_lull":0.2}],"outdoor_keys":["timestamp","air_temperature","barometric_pressure","station_pressure","pressure_trend","sea_level_pressure","relative_humidity","precip","precip_accum_last_1hr","precip_accum_local_day","precip_accum_local_day_final","precip_accum_local_yesterday_final","precip_minutes_local_day","precip_minutes_local_yesterday_final","wind_avg","wind_direction","wind_gust","wind_lull","solar_radiation","uv","brightness","lightning_strike_last_epoch","lightning_strike_last_distance","lightning_strike_count","lightning_strike_count_last_1hr","lightning_strike_count_last_3hr","feels_like","heat_index","wind_chill","dew_point","wet_bulb_temperature","wet_bulb_globe_temperature","delta_t","air_density"],"public_name":"Bluewing Way","station_id":215817,"station_name":"Bluewing Way","station_units":{"units_direction":"degrees","units_distance":"km","units_other":"metric","units_precip":"mm","units_pressure":"mb","units_temp":"c","units_wind":"kph"},"timezone":"America/Denver"}
 
 		// Parse the weather data
-		//JsonNode root = mapper.readTree( data );
+		JsonNode root = mapper.readTree( data );
+		ArrayNode obs = root.withArray( "obs" );
+		JsonNode observation = obs.get( 0 );
+
+		String id = root.get( "station_id" ).asString( "" );
+		String name = root.get( "station_name" ).asString( "" );
+
+		// Timestamp is in local time
+		String timestamp = observation.get( "timestamp" ).asString( "" );
+		String timezone = root.get( "timezone" ).asString( "" );
+
+		//		double temperature = getTemperature( observation.get( "temperature" ) );
+		//		double dewPoint = getTemperature( observation.get( "dewpoint" ) );
+		//		double windDirection = getAngle( observation.get( "windDirection" ) );
+		//		double windSpeed = getSpeed( observation.get( "windSpeed" ) );
+		//		double windGust = getSpeed( observation.get( "windGust" ) );
+		//		double humidity = getHumidity( observation.get( "relativeHumidity" ) );
+		//		double pressure = getPressure( observation.get( "barometricPressure" ) );
+		//
+		//		double longitude = coordinates.get( 0 ).asDouble();
+		//		double latitude = coordinates.get( 1 ).asDouble();
+		//		double elevation = getDistance( observation.get( "elevation" ) );
+
+		if( !station.getId().equals( id ) ) log.warn( "Station id mismatch: {} != {}", station.getId(), id );
+		station.setName( name );
+
+		// Timestamp
+		Instant localDateTime = Instant.ofEpochSecond( Long.parseLong( timestamp ) );
+		ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant( localDateTime, ZoneId.of( timezone ) );
+		station.setTimestamp( zonedDateTime.toInstant().toEpochMilli() );
+
+		//		station.setTemperature( temperature );
+		//		station.setTemperatureUnit( Unit.DEG_C );
+		//		station.setDewPoint( dewPoint );
+		//		station.setWindDirection( windDirection );
+		//		station.setWindDirectionUnit( Unit.DEGREE );
+		//		station.setWindSpeed( windSpeed );
+		//		station.setWindSpeedUnit( Unit.KPH );
+		//		station.setWindGust( windGust );
+		//		station.setHumidity( humidity );
+		//		station.setHumidityUnit( Unit.PERCENT );
+		//		station.setPressure( pressure );
+		//		station.setPressureUnit( Unit.PASCAL );
+		//
+		//		station.setLatitude( latitude );
+		//		station.setLongitude( longitude );
+		//		station.setElevation( elevation );
 
 		return station;
 	}
