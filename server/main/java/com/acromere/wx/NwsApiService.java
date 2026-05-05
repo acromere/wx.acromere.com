@@ -20,15 +20,15 @@ import java.time.Instant;
  */
 public class NwsApiService implements StationUpdateRequest {
 
+	public static final String BASE_URL = "https://api.weather.gov";
+
+	public static final String STATION_OBSERVATION = "/stations/{stationId}/observations/latest";
+
 	private final Logger log = LoggerFactory.getLogger( MethodHandles.lookup().lookupClass() );
 
 	private final ObjectMapper mapper;
 
 	private final RestClient restClient;
-
-	public static final String BASE_URL = "https://api.weather.gov";
-
-	public static final String STATION_OBSERVATION = "/stations/{stationId}/observations/latest";
 
 	public NwsApiService( RestClient.Builder builder, ObjectMapper mapper ) {
 		this.restClient = builder.baseUrl( BASE_URL ).build();
@@ -37,8 +37,6 @@ public class NwsApiService implements StationUpdateRequest {
 
 	public WeatherStation updateStation( WeatherStation station ) {
 		String data = fetchObservation( station.getId() );
-
-		System.out.println( data );
 
 		// Parse the weather data
 		JsonNode root = mapper.readTree( data );
