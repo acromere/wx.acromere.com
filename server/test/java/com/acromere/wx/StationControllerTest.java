@@ -31,7 +31,7 @@ public class StationControllerTest {
 		// given
 
 		// when
-		MvcResult result = mvc.perform( get( "/api/station?id=" + STATION_ID ).contentType( MediaType.APPLICATION_JSON ) ).andExpect( status().isOk() ).andReturn();
+		MvcResult result = mvc.perform( get( "/api/station/nws?id=" + STATION_ID ).contentType( MediaType.APPLICATION_JSON ) ).andExpect( status().isOk() ).andReturn();
 
 		// then
 		assertThat( result.getResponse().getStatus()).isEqualTo( 200 );

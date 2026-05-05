@@ -28,7 +28,7 @@ public class StationController {
 
 	@CrossOrigin( origins = "*" )
 	@RequestMapping( method = RequestMethod.GET, path = "/api/station/nws" )
-	public @ResponseBody WeatherStation getNoaaStation( @RequestParam( value = "id" ) String id ) {
+	public @ResponseBody WeatherStation getNwsStation( @RequestParam( value = "id" ) String id ) {
 		return updateStation( id, nwsApiService );
 	}
 
