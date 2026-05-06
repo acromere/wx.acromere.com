@@ -4,7 +4,7 @@ After=syslog.target
 
 [Service]
 User=acm
-ExecStart=java -jar /opt/acm/web/wx.acromere.com/server/acromere-wx.jar --server.port=5060
+ExecStart=java -jar /opt/acm/web/wx.acromere.com/server/acromere-wx.jar --server.port=5060 --spring.profiles.active=prod
 WorkingDirectory=/opt/acm/web/wx.acromere.com/server
 SuccessExitStatus=143
 
