@@ -40,12 +40,7 @@ public class TempestApiService implements StationUpdateRequest {
 
 	@Override
 	public WeatherStation updateStation( WeatherStation station ) {
-		System.out.println( "Updating station " + station.getId() );
-		System.out.println( "Access token: " + accessToken );
-
 		String data = fetchObservation( station.getId() );
-
-		//System.out.println( data );
 
 		// Parse the weather data
 		JsonNode root = mapper.readTree( data );
