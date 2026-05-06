@@ -35,8 +35,8 @@ public class TempestApiServiceTest {
 
 	@BeforeEach
 	public void setup() {
-		ReflectionTestUtils.setField(tempestApiService, "restClient", restClient);
-		ReflectionTestUtils.setField(tempestApiService, "mapper", mapper);
+		ReflectionTestUtils.setField( tempestApiService, "restClient", restClient );
+		ReflectionTestUtils.setField( tempestApiService, "mapper", mapper );
 	}
 
 	@Test
@@ -59,6 +59,22 @@ public class TempestApiServiceTest {
 		verify( tempestApiService, times( 1 ) ).fetchObservation( eq( STATION_ID ) );
 		assertThat( station.getId() ).isEqualTo( STATION_ID );
 		assertThat( station.getName() ).isEqualTo( "Bluewing Way" );
+		assertThat( station.getTimestamp() ).isEqualTo( 1777998046000L );
+		assertThat( station.getTemperature() ).isEqualTo( 9.3 );
+		assertThat( station.getDewPoint() ).isEqualTo( 3.9 );
+		assertThat( station.getWindDirection() ).isEqualTo( 179.0 );
+		assertThat( station.getWindSpeed() ).isEqualTo( 2.0 );
+		assertThat( station.getWindGust() ).isEqualTo( 2.8 );
+		assertThat( station.getHumidity() ).isEqualTo( 69.0 );
+		assertThat( station.getPressure() ).isEqualTo( 101170.0 );
+
+		assertThat( station.getLatitude() ).isEqualTo( 40.50388 );
+		assertThat( station.getLongitude() ).isEqualTo( -112.01338 );
+		assertThat( station.getElevation() ).isEqualTo( 1476.9608154296875 );
+
+		assertThat( station.getWindSpeedUnit() ).isEqualTo( Unit.KPH );
+		assertThat( station.getTemperatureUnit() ).isEqualTo( Unit.DEG_C );
+		assertThat( station.getWindDirectionUnit() ).isEqualTo( Unit.DEGREE );
 	}
 
 }

@@ -10,9 +10,6 @@ import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.node.ArrayNode;
 
 import java.lang.invoke.MethodHandles;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 
 /**
  * The <a href="https://weatherflow.github.io/Tempest/api/">Tempest Weather Station API</a> service.
@@ -46,50 +43,52 @@ public class TempestApiService implements StationUpdateRequest {
 		JsonNode root = mapper.readTree( data );
 		ArrayNode obs = root.withArray( "obs" );
 		JsonNode observation = obs.get( 0 );
+		JsonNode units = root.get( "station_units" );
+
+		String directionUnit = units.get( "units_direction" ).asString();
+		String distanceUnit = units.get( "units_distance" ).asString();
+		String humidityUnit = "%";
+		String pressureUnit = units.get( "units_pressure" ).asString();
+		String precipitationUnit = units.get( "units_precip" ).asString();
+		String temperatureUnit = units.get( "units_temp" ).asString();
+		String speedUnit = units.get( "units_wind" ).asString();
+		String elevationUnit = "m";
 
 		String id = root.get( "station_id" ).asString( "" );
 		String name = root.get( "station_name" ).asString( "" );
+		long timestamp = observation.get( "timestamp" ).asLong( 0 );
+		double temperature = getTemperature( observation.get( "air_temperature" ), temperatureUnit );
+		double dewPoint = getTemperature( observation.get( "dew_point" ), temperatureUnit );
+		double windDirection = getDirection( observation.get( "wind_direction" ), directionUnit );
+		double windSpeed = getSpeed( observation.get( "wind_avg" ), speedUnit );
+		double windGust = getSpeed( observation.get( "wind_gust" ), speedUnit );
+		double humidity = getHumidity( observation.get( "relative_humidity" ), humidityUnit );
+		double pressure = getPressure( observation.get( "sea_level_pressure" ), pressureUnit );
 
-		// Timestamp is in local time
-		String timestamp = observation.get( "timestamp" ).asString( "" );
-		String timezone = root.get( "timezone" ).asString( "" );
-
-		//		double temperature = getTemperature( observation.get( "temperature" ) );
-		//		double dewPoint = getTemperature( observation.get( "dewpoint" ) );
-		//		double windDirection = getAngle( observation.get( "windDirection" ) );
-		//		double windSpeed = getSpeed( observation.get( "windSpeed" ) );
-		//		double windGust = getSpeed( observation.get( "windGust" ) );
-		//		double humidity = getHumidity( observation.get( "relativeHumidity" ) );
-		//		double pressure = getPressure( observation.get( "barometricPressure" ) );
-		//
-		//		double longitude = coordinates.get( 0 ).asDouble();
-		//		double latitude = coordinates.get( 1 ).asDouble();
-		//		double elevation = getDistance( observation.get( "elevation" ) );
+		double latitude = root.get( "latitude" ).asDouble();
+		double longitude = root.get( "longitude" ).asDouble();
+		double elevation = getElevation( root.get( "elevation" ), elevationUnit );
 
 		if( !station.getId().equals( id ) ) log.warn( "Station id mismatch: {} != {}", station.getId(), id );
 		station.setName( name );
+		station.setTimestamp( timestamp * 1000 );
 
-		// Timestamp
-		Instant localDateTime = Instant.ofEpochSecond( Long.parseLong( timestamp ) );
-		ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant( localDateTime, ZoneId.of( timezone ) );
-		station.setTimestamp( zonedDateTime.toInstant().toEpochMilli() );
+		station.setTemperature( temperature );
+		station.setTemperatureUnit( Unit.DEG_C );
+		station.setDewPoint( dewPoint );
+		station.setWindDirection( windDirection );
+		station.setWindDirectionUnit( Unit.DEGREE );
+		station.setWindSpeed( windSpeed );
+		station.setWindSpeedUnit( Unit.KPH );
+		station.setWindGust( windGust );
+		station.setHumidity( humidity );
+		station.setHumidityUnit( Unit.PERCENT );
+		station.setPressure( pressure );
+		station.setPressureUnit( Unit.PASCAL );
 
-		//		station.setTemperature( temperature );
-		//		station.setTemperatureUnit( Unit.DEG_C );
-		//		station.setDewPoint( dewPoint );
-		//		station.setWindDirection( windDirection );
-		//		station.setWindDirectionUnit( Unit.DEGREE );
-		//		station.setWindSpeed( windSpeed );
-		//		station.setWindSpeedUnit( Unit.KPH );
-		//		station.setWindGust( windGust );
-		//		station.setHumidity( humidity );
-		//		station.setHumidityUnit( Unit.PERCENT );
-		//		station.setPressure( pressure );
-		//		station.setPressureUnit( Unit.PASCAL );
-		//
-		//		station.setLatitude( latitude );
-		//		station.setLongitude( longitude );
-		//		station.setElevation( elevation );
+		station.setLatitude( latitude );
+		station.setLongitude( longitude );
+		station.setElevation( elevation );
 
 		return station;
 	}
@@ -103,4 +102,72 @@ public class TempestApiService implements StationUpdateRequest {
 			.retrieve()
 			.body( String.class );
 	}
+
+	private double getTemperature( JsonNode node, String unit ) {
+		double value = node.asDouble();
+
+		double scale;
+		if( unit.equals( "c" ) ) {
+			scale = 1.0;
+		} else if( unit.endsWith( "f" ) ) {
+			scale = 9.0 / 5.0;
+		} else {
+			scale = Double.NaN;
+		}
+
+		return value * scale;
+	}
+
+	private double getSpeed( JsonNode node, String unit ) {
+		double value = node.asDouble();
+
+		double scale;
+		if( unit.endsWith( "kph" ) ) {
+			scale = 1.0;
+		} else if( unit.endsWith( "mph" ) ) {
+			scale = 0.621371;
+		} else {
+			scale = Double.NaN;
+		}
+		return value * scale;
+	}
+
+	private double getPressure( JsonNode node, String unit ) {
+		double value = node.asDouble();
+
+		double scale;
+		if( unit.endsWith( "pa" ) ) {
+			scale = 1.0;
+		} else if( unit.endsWith( "mb" ) ) {
+			scale = 100.0;
+		} else {
+			scale = Double.NaN;
+		}
+
+		return value * scale;
+	}
+
+	private double getHumidity( JsonNode node, String unit ) {
+		return node.asDouble();
+	}
+
+	private double getDirection( JsonNode node, String unit ) {
+		return node.asDouble();
+	}
+
+	private double getElevation( JsonNode node, String unit ) {
+		double value = node.asDouble();
+
+		double scale;
+		if( unit.endsWith( "m" ) ) {
+			scale = 1.0;
+		} else if( unit.endsWith( "ft" ) ) {
+			scale = 0.3048;
+		} else {
+			scale = Double.NaN;
+		}
+
+		return value * scale;
+	}
+
 }
