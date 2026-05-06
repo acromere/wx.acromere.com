@@ -1,5 +1,6 @@
 package com.acromere.wx;
 
+import jakarta.annotation.security.PermitAll;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +10,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@PermitAll
 @RestController
 public class StationController {
 

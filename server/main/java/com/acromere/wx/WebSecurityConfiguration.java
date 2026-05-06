@@ -13,7 +13,7 @@ public class WebSecurityConfiguration {
 	@Bean
 	public SecurityFilterChain securityFilterChain( HttpSecurity http ) throws Exception {
 		http.authorizeHttpRequests( authorizeRequests -> authorizeRequests
-			// Allow public access to /station/**
+			// Allow public access to /api/**
 			.requestMatchers( "/api/**" ).permitAll()
 			// Require ADMIN role for /admin/**
 			//.requestMatchers( "/admin/**" ).hasRole( "ADMIN" )
