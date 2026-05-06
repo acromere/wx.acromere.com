@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class StationControllerTest {
 
-	private static final String STATION_ID = "KATL";
+	private static final String NWS_STATION_ID = "KATL";
 
 	@Autowired
 	private MockMvc mvc;
@@ -27,11 +27,11 @@ public class StationControllerTest {
 	private ObjectMapper objectMapper;
 
 	@Test
-	public void testGetWeatherInfo() throws Exception {
+	public void testGetNwsStationObservation() throws Exception {
 		// given
 
 		// when
-		MvcResult result = mvc.perform( get( "/api/station/nws?id=" + STATION_ID ).contentType( MediaType.APPLICATION_JSON ) ).andExpect( status().isOk() ).andReturn();
+		MvcResult result = mvc.perform( get( "/api/station/nws?id=" + NWS_STATION_ID ).contentType( MediaType.APPLICATION_JSON ) ).andExpect( status().isOk() ).andReturn();
 
 		// then
 		assertThat( result.getResponse().getStatus()).isEqualTo( 200 );
