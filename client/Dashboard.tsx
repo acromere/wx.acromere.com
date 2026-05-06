@@ -7,7 +7,9 @@ import WeatherService from "./api/WeatherService.ts"
 
 export default function Dashboard() {
 
-  const DEFAULT_TEMPEST_STATION_ID = '215817'
+  const DEFAULT_SOURCE_ID = 'tempest'
+
+  const DEFAULT_STATION_ID = '215817'
 
   const DEFAULT_NWS_STATION_ID = 'HERUT'
 
@@ -16,14 +18,20 @@ export default function Dashboard() {
   const updateStation: () => void = (): void => {
     const queryString: string = window.location.search;
     const params = new URLSearchParams(queryString);
-    let stationId: string = params.get('id')
-    if (stationId === null) stationId = DEFAULT_NWS_STATION_ID
+    let sourceId: string = params.get('source')
+    if( sourceId === null ) sourceId = DEFAULT_SOURCE_ID
+    let stationId: string = params.get('station')
+    if (stationId === null) stationId = DEFAULT_STATION_ID
 
-    console.log("Station ID=" + stationId);
+    console.log("source=" + sourceId + " station=" + stationId);
 
-    new WeatherService().fetchNwsWeather(stationId, (station: any): void => {
+    new WeatherService().fetchTempestWeather(stationId, (station: any): void => {
       setStation(station);
     }).then()
+
+    // new WeatherService().fetchNwsWeather(stationId, (station: any): void => {
+    //   setStation(station);
+    // }).then()
   }
 
   useEffect((): () => void => {
