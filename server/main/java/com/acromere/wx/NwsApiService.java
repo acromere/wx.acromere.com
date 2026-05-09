@@ -18,7 +18,7 @@ import java.time.Instant;
  * <a href="https://www.weather.gov/documentation/services-web-api">weather.gov API</a>
  *
  */
-public class NwsApiService implements StationUpdateRequest {
+public class NwsApiService implements StationApiService {
 
 	public static final String BASE_URL = "https://api.weather.gov";
 

@@ -1,6 +1,7 @@
 package com.acromere.wx;
 
-public interface StationUpdateRequest {
+public interface StationApiService {
 
 	WeatherStation updateStation( WeatherStation station );
+
 }

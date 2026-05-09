@@ -40,7 +40,7 @@ public class StationController {
 		return updateStation( id, tempestApiService );
 	}
 
-	private WeatherStation updateStation( String id, StationUpdateRequest request ) {
+	private WeatherStation updateStation( String id, StationApiService request ) {
 		WeatherStation computedStation = stations.computeIfAbsent( id, WeatherStation::new );
 		WeatherStation station = request.updateStation( computedStation );
 

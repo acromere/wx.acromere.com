@@ -15,7 +15,7 @@ import java.lang.invoke.MethodHandles;
  * The <a href="https://weatherflow.github.io/Tempest/api/">Tempest Weather Station API</a> service.
  */
 @Service
-public class TempestApiService implements StationUpdateRequest {
+public class TempestApiService implements StationApiService {
 
 	public static final String BASE_URL = "https://swd.weatherflow.com/swd/rest";
 
@@ -37,6 +37,7 @@ public class TempestApiService implements StationUpdateRequest {
 
 	@Override
 	public WeatherStation updateStation( WeatherStation station ) {
+		// Fetch the weather data
 		String data = fetchObservation( station.getId() );
 
 		// Parse the weather data
@@ -45,6 +46,7 @@ public class TempestApiService implements StationUpdateRequest {
 		JsonNode observation = obs.get( 0 );
 		JsonNode units = root.get( "station_units" );
 
+		// Units
 		String directionUnit = units.get( "units_direction" ).asString();
 		String distanceUnit = units.get( "units_distance" ).asString();
 		String humidityUnit = "%";
@@ -54,8 +56,14 @@ public class TempestApiService implements StationUpdateRequest {
 		String speedUnit = units.get( "units_wind" ).asString();
 		String elevationUnit = "m";
 
+		// Static metrics
 		String id = root.get( "station_id" ).asString( "" );
 		String name = root.get( "station_name" ).asString( "" );
+		double latitude = root.get( "latitude" ).asDouble();
+		double longitude = root.get( "longitude" ).asDouble();
+		double elevation = getElevation( root.get( "elevation" ), elevationUnit );
+
+		// Dynamic metrics
 		long timestamp = observation.get( "timestamp" ).asLong( 0 );
 		double temperature = getTemperature( observation.get( "air_temperature" ), temperatureUnit );
 		double dewPoint = getTemperature( observation.get( "dew_point" ), temperatureUnit );
@@ -65,14 +73,17 @@ public class TempestApiService implements StationUpdateRequest {
 		double humidity = getHumidity( observation.get( "relative_humidity" ), humidityUnit );
 		double pressure = getPressure( observation.get( "sea_level_pressure" ), pressureUnit );
 
-		double latitude = root.get( "latitude" ).asDouble();
-		double longitude = root.get( "longitude" ).asDouble();
-		double elevation = getElevation( root.get( "elevation" ), elevationUnit );
-
+		// Double-check the station ids
 		if( !station.getId().equals( id ) ) log.warn( "Station id mismatch: {} != {}", station.getId(), id );
-		station.setName( name );
-		station.setTimestamp( timestamp * 1000 );
 
+		// Store the static metrics
+		station.setName( name );
+		station.setLatitude( latitude );
+		station.setLongitude( longitude );
+		station.setElevation( elevation );
+
+		// Store the dymanic metrics
+		station.setTimestamp( timestamp * 1000 );
 		station.setTemperature( temperature );
 		station.setTemperatureUnit( Unit.DEG_C );
 		station.setDewPoint( dewPoint );
@@ -85,10 +96,6 @@ public class TempestApiService implements StationUpdateRequest {
 		station.setHumidityUnit( Unit.PERCENT );
 		station.setPressure( pressure );
 		station.setPressureUnit( Unit.PASCAL );
-
-		station.setLatitude( latitude );
-		station.setLongitude( longitude );
-		station.setElevation( elevation );
 
 		return station;
 	}
