@@ -60,21 +60,22 @@ public class NwsApiService implements StationApiService {
 		double latitude = coordinates.get( 1 ).asDouble();
 		double elevation = getDistance( properties.get( "elevation" ) );
 
+		station.setTemperatureUnit( Unit.DEG_C );
+		station.setWindDirectionUnit( Unit.DEGREE );
+		station.setWindSpeedUnit( Unit.KPH );
+		station.setHumidityUnit( Unit.PERCENT );
+		station.setPressureUnit( Unit.PASCAL );
+
 		if( !station.getId().equals( id ) ) log.warn( "Station id mismatch: {} != {}", station.getId(), id );
 		station.setName( name );
 		station.setTimestamp( Instant.parse( timestamp ).toEpochMilli() );
 		station.setTemperature( temperature );
-		station.setTemperatureUnit( Unit.DEG_C );
 		station.setDewPoint( dewPoint );
 		station.setWindDirection( windDirection );
-		station.setWindDirectionUnit( Unit.DEGREE );
 		station.setWindSpeed( windSpeed );
-		station.setWindSpeedUnit( Unit.KPH );
 		station.setWindGust( windGust );
 		station.setHumidity( humidity );
-		station.setHumidityUnit( Unit.PERCENT );
 		station.setPressure( pressure );
-		station.setPressureUnit( Unit.PASCAL );
 
 		station.setLatitude( latitude );
 		station.setLongitude( longitude );
