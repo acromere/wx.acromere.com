@@ -5,11 +5,11 @@ import Content from "./Content.tsx";
 
 function App() {
   return (
-    <>
+    <div className="app">
       <Header/>
       <Content/>
       <Footer/>
-    </>
+    </div>
   )
 }
 

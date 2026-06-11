@@ -48,16 +48,16 @@ export default function Dashboard() {
 
   return (
     <div className="dashboard">
-      <div className="content-left col-4">
+      <div className="content-right col-4">
         <div className="buffer"/>
-        <FlightConditions station={station}/>
+        <WeatherStation station={station}/>
       </div>
       <div className="content-center col-4">
         <Clock/>
       </div>
-      <div className="content-right col-4">
+      <div className="content-left col-4">
         <div className="buffer"/>
-        <WeatherStation station={station}/>
+        <FlightConditions station={station}/>
       </div>
     </div>
   )

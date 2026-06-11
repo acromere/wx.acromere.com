@@ -119,16 +119,25 @@ body {
 	display: table;
 }
 
+.app {
+	display: flex;
+	flex-flow: column nowrap;
+	justify-content: space-between;
+	align-items: center;
+	min-height: 100vh;
+}
+
 /* For content */
 .header {
 	justify-self: center;
 }
 
 .content {
-	flex-grow: 1;
+	align-self: stretch;
 
 	display: flex;
 	flex-flow: column nowrap;
+	flex-grow: 1;
 }
 
 .footer {

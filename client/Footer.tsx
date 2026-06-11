@@ -4,7 +4,7 @@ export default function Footer() {
 
   return (
     <div className="footer">
-      <p>&copy; Acromere {now.getFullYear()}</p>
+      <p>Acromere Weather &copy; Acromere {now.getFullYear()}</p>
     </div>
   )
 
