@@ -72,6 +72,7 @@ public class TempestApiService implements StationApiService {
 		double windGust = getSpeed( observation.get( "wind_gust" ), speedUnit );
 		double humidity = getHumidity( observation.get( "relative_humidity" ), humidityUnit );
 		double pressure = getPressure( observation.get( "sea_level_pressure" ), pressureUnit );
+		double precipitation = getPrecipitation( observation.get( "precip" ), precipitationUnit );
 
 		// Double-check the station ids
 		if( !station.getId().equals( id ) ) log.warn( "Station id mismatch: {} != {}", station.getId(), id );
@@ -95,8 +96,8 @@ public class TempestApiService implements StationApiService {
 		station.setHumidity( humidity );
 		station.setHumidityUnit( Unit.PERCENT );
 		station.setPressure( pressure );
-		station.setPressureUnit( Unit.PASCAL );
-
+		station.setRainTotalDaily( precipitation );
+		station.setRainUnit( Unit.MM );
 		return station;
 	}
 
@@ -132,10 +133,11 @@ public class TempestApiService implements StationApiService {
 		if( unit.endsWith( "kph" ) ) {
 			scale = 1.0;
 		} else if( unit.endsWith( "mph" ) ) {
-			scale = 0.621371;
+			scale = 1.60934;
 		} else {
 			scale = Double.NaN;
 		}
+
 		return value * scale;
 	}
 
@@ -158,6 +160,21 @@ public class TempestApiService implements StationApiService {
 		return node.asDouble();
 	}
 
+	private double getPrecipitation( JsonNode node, String unit ) {
+		double value = node.asDouble();
+
+		double scale;
+		if( unit.endsWith( "mm" ) ) {
+			scale = 1.0;
+		} else if( unit.endsWith( "in" ) ) {
+			scale = 25.4;
+		} else {
+			scale = Double.NaN;
+		}
+
+		return value * scale;
+	}
+
 	private double getDirection( JsonNode node, String unit ) {
 		return node.asDouble();
 	}
@@ -169,12 +186,11 @@ public class TempestApiService implements StationApiService {
 		if( unit.endsWith( "m" ) ) {
 			scale = 1.0;
 		} else if( unit.endsWith( "ft" ) ) {
-			scale = 0.3048;
+			scale = 1 / 3.28084;
 		} else {
 			scale = Double.NaN;
 		}
 
 		return value * scale;
 	}
-
 }
