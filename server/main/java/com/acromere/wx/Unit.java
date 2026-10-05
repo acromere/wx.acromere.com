@@ -10,7 +10,7 @@ public class Unit {
 
 	public static final String KPH = "kph";
 
-	public static final String MM = "MM";
+	public static final String MM = "mm";
 
 	// Imperial
 	public static final String DEG_F = DEGREE + "F";
