@@ -124,7 +124,7 @@ public class WeatherStation {
 
 	private String sunIlluminationUnit = "%";
 
-	private String radiationUnit = "";
+	private String radiationUnit = "W/m²";
 
 	private String ultraVioletUnit = "";
 

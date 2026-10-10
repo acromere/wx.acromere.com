@@ -60,7 +60,7 @@ public class TempestApiService implements StationApiService {
 			String temperatureUnit = units.get( "units_temp" ).asString();
 			String speedUnit = units.get( "units_wind" ).asString();
 			String elevationUnit = "m";
-			String radiationUnit = "";
+			String radiationUnit = "W/m²";
 			String ultraVioletUnit = "";
 
 			// Static metrics
@@ -108,9 +108,9 @@ public class TempestApiService implements StationApiService {
 			station.setRainTotalDaily( precipitation );
 			station.setRainUnit( Unit.MM );
 			station.setSolarRadiation( solarRadiation );
-			station.setRadiationUnit( radiationUnit );
+			//station.setRadiationUnit( radiationUnit );
 			station.setSolarUltraViolet( solarUltraViolet );
-			station.setUltraVioletUnit( ultraVioletUnit );
+			//station.setUltraVioletUnit( ultraVioletUnit );
 		} catch( Exception exception ) {
 			throw new ResponseStatusException( HttpStatus.BAD_GATEWAY, exception.getMessage() );
 		}
