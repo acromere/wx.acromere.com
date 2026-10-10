@@ -11,14 +11,14 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class WebSecurityConfiguration {
 
 	@Bean
-	public SecurityFilterChain securityFilterChain( HttpSecurity http ) throws Exception {
+	public SecurityFilterChain securityFilterChain( HttpSecurity http ) {
 		http.authorizeHttpRequests( authorizeRequests -> authorizeRequests
 			// Allow public access to /api/**
-			.requestMatchers( "/api/**" ).permitAll()
+			.requestMatchers( "/api/**", "/error" ).permitAll()
 			// Require ADMIN role for /admin/**
 			//.requestMatchers( "/admin/**" ).hasRole( "ADMIN" )
 			// All other requests require authentication
-			.anyRequest().authenticated() ).httpBasic( withDefaults() ); // Use default HTTP Basic authentication
+			.anyRequest().authenticated() ).httpBasic( withDefaults() );
 
 		return http.build();
 	}

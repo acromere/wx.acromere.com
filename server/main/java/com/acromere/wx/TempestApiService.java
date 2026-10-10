@@ -3,8 +3,10 @@ package com.acromere.wx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.server.ResponseStatusException;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.node.ArrayNode;
@@ -38,66 +40,80 @@ public class TempestApiService implements StationApiService {
 	@Override
 	public WeatherStation updateStation( WeatherStation station ) {
 		// Fetch the weather data
-		String data = fetchObservation( station.getId() );
+		try {
+			String data = fetchObservation( station.getId() );
 
-		// Parse the weather data
-		JsonNode root = mapper.readTree( data );
-		ArrayNode obs = root.withArray( "obs" );
-		JsonNode observation = obs.get( 0 );
-		JsonNode units = root.get( "station_units" );
+			System.out.println( data );
 
-		// Units
-		String directionUnit = units.get( "units_direction" ).asString();
-		String distanceUnit = units.get( "units_distance" ).asString();
-		String humidityUnit = "%";
-		String pressureUnit = units.get( "units_pressure" ).asString();
-		String precipitationUnit = units.get( "units_precip" ).asString();
-		String temperatureUnit = units.get( "units_temp" ).asString();
-		String speedUnit = units.get( "units_wind" ).asString();
-		String elevationUnit = "m";
+			// Parse the weather data
+			JsonNode root = mapper.readTree( data );
+			ArrayNode obs = root.withArray( "obs" );
+			JsonNode observation = obs.get( 0 );
+			JsonNode units = root.get( "station_units" );
 
-		// Static metrics
-		String id = root.get( "station_id" ).asString( "" );
-		String name = root.get( "station_name" ).asString( "" );
-		double latitude = root.get( "latitude" ).asDouble();
-		double longitude = root.get( "longitude" ).asDouble();
-		double elevation = getElevation( root.get( "elevation" ), elevationUnit );
+			// Units
+			String directionUnit = units.get( "units_direction" ).asString();
+			String distanceUnit = units.get( "units_distance" ).asString();
+			String humidityUnit = "%";
+			String pressureUnit = units.get( "units_pressure" ).asString();
+			String precipitationUnit = units.get( "units_precip" ).asString();
+			String temperatureUnit = units.get( "units_temp" ).asString();
+			String speedUnit = units.get( "units_wind" ).asString();
+			String elevationUnit = "m";
+			String radiationUnit = "";
+			String ultraVioletUnit = "";
 
-		// Dynamic metrics
-		long timestamp = observation.get( "timestamp" ).asLong( 0 );
-		double temperature = getTemperature( observation.get( "air_temperature" ), temperatureUnit );
-		double dewPoint = getTemperature( observation.get( "dew_point" ), temperatureUnit );
-		double windDirection = getDirection( observation.get( "wind_direction" ), directionUnit );
-		double windSpeed = getSpeed( observation.get( "wind_avg" ), speedUnit );
-		double windGust = getSpeed( observation.get( "wind_gust" ), speedUnit );
-		double humidity = getHumidity( observation.get( "relative_humidity" ), humidityUnit );
-		double pressure = getPressure( observation.get( "sea_level_pressure" ), pressureUnit );
-		double precipitation = getPrecipitation( observation.get( "precip" ), precipitationUnit );
+			// Static metrics
+			String id = root.get( "station_id" ).asString( "" );
+			String name = root.get( "station_name" ).asString( "" );
+			double latitude = root.get( "latitude" ).asDouble();
+			double longitude = root.get( "longitude" ).asDouble();
+			double elevation = getElevation( root.get( "elevation" ), elevationUnit );
 
-		// Double-check the station ids
-		if( !station.getId().equals( id ) ) log.warn( "Station id mismatch: {} != {}", station.getId(), id );
+			// Dynamic metrics
+			long timestamp = observation.get( "timestamp" ).asLong( 0 );
+			double temperature = getTemperature( observation.get( "air_temperature" ), temperatureUnit );
+			double dewPoint = getTemperature( observation.get( "dew_point" ), temperatureUnit );
+			double windDirection = getDirection( observation.get( "wind_direction" ), directionUnit );
+			double windSpeed = getSpeed( observation.get( "wind_avg" ), speedUnit );
+			double windGust = getSpeed( observation.get( "wind_gust" ), speedUnit );
+			double humidity = getHumidity( observation.get( "relative_humidity" ), humidityUnit );
+			double pressure = getPressure( observation.get( "sea_level_pressure" ), pressureUnit );
+			double precipitation = getPrecipitation( observation.get( "precip_accum_local_day" ), precipitationUnit );
+			double solarRadiation = getRadiation( observation.get( "solar_radiation" ), radiationUnit );
+			double solarUltraViolet = getUltraViolet( observation.get( "uv" ), ultraVioletUnit );
 
-		// Store the static metrics
-		station.setName( name );
-		station.setLatitude( latitude );
-		station.setLongitude( longitude );
-		station.setElevation( elevation );
+			// Double-check the station ids
+			if( !station.getId().equals( id ) ) log.warn( "Station id mismatch: {} != {}", station.getId(), id );
 
-		// Store the dymanic metrics
-		station.setTimestamp( timestamp * 1000 );
-		station.setTemperature( temperature );
-		station.setTemperatureUnit( Unit.DEG_C );
-		station.setDewPoint( dewPoint );
-		station.setWindDirection( windDirection );
-		station.setWindDirectionUnit( Unit.DEGREE );
-		station.setWindSpeed( windSpeed );
-		station.setWindSpeedUnit( Unit.KPH );
-		station.setWindGust( windGust );
-		station.setHumidity( humidity );
-		station.setHumidityUnit( Unit.PERCENT );
-		station.setPressure( pressure );
-		station.setRainTotalDaily( precipitation );
-		station.setRainUnit( Unit.MM );
+			// Store the static metrics
+			station.setName( name );
+			station.setLatitude( latitude );
+			station.setLongitude( longitude );
+			station.setElevation( elevation );
+
+			// Store the dymanic metrics
+			station.setTimestamp( timestamp * 1000 );
+			station.setTemperature( temperature );
+			station.setTemperatureUnit( Unit.DEG_C );
+			station.setDewPoint( dewPoint );
+			station.setWindDirection( windDirection );
+			station.setWindDirectionUnit( Unit.DEGREE );
+			station.setWindSpeed( windSpeed );
+			station.setWindSpeedUnit( Unit.KPH );
+			station.setWindGust( windGust );
+			station.setHumidity( humidity );
+			station.setHumidityUnit( Unit.PERCENT );
+			station.setPressure( pressure );
+			station.setRainTotalDaily( precipitation );
+			station.setRainUnit( Unit.MM );
+			station.setSolarRadiation( solarRadiation );
+			station.setRadiationUnit( radiationUnit );
+			station.setSolarUltraViolet( solarUltraViolet );
+			station.setUltraVioletUnit( ultraVioletUnit );
+		} catch( Exception exception ) {
+			throw new ResponseStatusException( HttpStatus.BAD_GATEWAY, exception.getMessage() );
+		}
 		return station;
 	}
 
@@ -173,6 +189,14 @@ public class TempestApiService implements StationApiService {
 		}
 
 		return value * scale;
+	}
+
+	private double getRadiation( JsonNode node, String unit ) {
+		return node.asDouble();
+	}
+
+	private double getUltraViolet( JsonNode node, String unit ) {
+		return node.asDouble();
 	}
 
 	private double getDirection( JsonNode node, String unit ) {

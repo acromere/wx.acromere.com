@@ -91,6 +91,10 @@ public class WeatherStation {
 
 	private double sunIllumination;
 
+	private double solarRadiation;
+
+	private double solarUltraViolet;
+
 	private boolean postMeridian;
 
 	// Unit values
@@ -119,6 +123,10 @@ public class WeatherStation {
 	private String sunAltitudeUnit = DEGREE;
 
 	private String sunIlluminationUnit = "%";
+
+	private String radiationUnit = "";
+
+	private String ultraVioletUnit = "";
 
 	private final FlightCondition flightCondition;
 
@@ -183,6 +191,9 @@ public class WeatherStation {
 		this.setWindDirectionTenMinAvg( that.getWindDirectionTenMinAvg() );
 		this.setWindDirectionTwoMinAvg( that.getWindDirectionTwoMinAvg() );
 
+		this.setSolarRadiation( that.getSolarRadiation() );
+		this.setSolarUltraViolet( that.getSolarUltraViolet() );
+
 		this.setTemperatureUnit( that.getTemperatureUnit() );
 		this.setHumidityUnit( that.getHumidityUnit() );
 		this.setPressureUnit( that.getPressureUnit() );
@@ -194,6 +205,8 @@ public class WeatherStation {
 		this.setHumidityTrendUnit( that.getHumidityTrendUnit() );
 		this.setPressureTrendUnit( that.getPressureTrendUnit() );
 		this.setWindSpeedTrendUnit( that.getWindSpeedTrendUnit() );
+		this.setRadiationUnit( that.getRadiationUnit() );
+		this.setUltraVioletUnit( that.getUltraVioletUnit() );
 	}
 
 	public void updateExtendedValues() {
