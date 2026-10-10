@@ -43,7 +43,7 @@ public class TempestApiService implements StationApiService {
 		try {
 			String data = fetchObservation( station.getId() );
 
-			System.out.println( data );
+			//System.out.println( data );
 
 			// Parse the weather data
 			JsonNode root = mapper.readTree( data );

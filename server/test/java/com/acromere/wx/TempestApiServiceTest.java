@@ -59,14 +59,14 @@ public class TempestApiServiceTest {
 		verify( tempestApiService, times( 1 ) ).fetchObservation( eq( STATION_ID ) );
 		assertThat( station.getId() ).isEqualTo( STATION_ID );
 		assertThat( station.getName() ).isEqualTo( "Bluewing Way" );
-		assertThat( station.getTimestamp() ).isEqualTo( 1777998046000L );
-		assertThat( station.getTemperature() ).isEqualTo( 9.3 );
-		assertThat( station.getDewPoint() ).isEqualTo( 3.9 );
-		assertThat( station.getWindDirection() ).isEqualTo( 179.0 );
-		assertThat( station.getWindSpeed() ).isEqualTo( 2.0 );
-		assertThat( station.getWindGust() ).isEqualTo( 2.8 );
-		assertThat( station.getHumidity() ).isEqualTo( 69.0 );
-		assertThat( station.getPressure() ).isEqualTo( 101170.0 );
+		assertThat( station.getTimestamp() ).isEqualTo( 1791674272000L );
+		assertThat( station.getTemperature() ).isEqualTo( 17.2 );
+		assertThat( station.getDewPoint() ).isEqualTo( 10.6 );
+		assertThat( station.getWindDirection() ).isEqualTo( 196.0 );
+		assertThat( station.getWindSpeed() ).isEqualTo( 1.0 );
+		assertThat( station.getWindGust() ).isEqualTo( 1.7 );
+		assertThat( station.getHumidity() ).isEqualTo( 65.0 );
+		assertThat( station.getPressure() ).isEqualTo( 100460.0 );
 
 		assertThat( station.getLatitude() ).isEqualTo( 40.50388 );
 		assertThat( station.getLongitude() ).isEqualTo( -112.01338 );
