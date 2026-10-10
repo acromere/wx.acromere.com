@@ -13,6 +13,8 @@ export default function Stats(props: any) {
   const rainTotalDaily = parseFloat(props.station.rainTotalDaily).toFixed(2);
   const feelsLike = parseFloat(props.station.feelsLike).toFixed(1);
   const tempUnit = props.station.temperatureUnit;
+  const solarRadiation = props.station.solarRadiation;
+  const solarUltraViolet = props.station.solarUltraViolet;
 
   return (
     <div className="stats">
@@ -48,6 +50,16 @@ export default function Stats(props: any) {
           <td className="label">rain&nbsp;</td>
           <td className="value">&nbsp;{rainTotalDaily}</td>
           <td className="unit">&nbsp;{props.station.rainUnit}</td>
+        </tr>
+        <tr>
+          <td className="label">radiation&nbsp;</td>
+          <td className="value">&nbsp;{solarRadiation}</td>
+          <td className="unit">&nbsp;{props.station.radiationUnit}</td>
+        </tr>
+        <tr>
+          <td className="label">uv index&nbsp;</td>
+          <td className="value">&nbsp;{solarUltraViolet}</td>
+          <td className="unit">&nbsp;{props.station.ultraVioletUnit}</td>
         </tr>
         </tbody>
       </table>
