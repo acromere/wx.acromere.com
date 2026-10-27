@@ -11,10 +11,10 @@ import java.util.List;
 public class FlightCondition {
 
 	public enum Summary {
+		GREAT,
 		GOOD,
-		FAIR, // FINE
+		FAIR,
 		POOR,
-		BAD,
 		HOLD
 	}
 
@@ -33,12 +33,12 @@ public class FlightCondition {
 		DARK
 	}
 
-	private Summary summary = Summary.GOOD;
+	private Summary summary = Summary.GREAT;
 
 	private List<Reason> reasons = new ArrayList<>();
 
 	public void reset() {
-		summary = Summary.GOOD;
+		summary = Summary.GREAT;
 		reasons = new ArrayList<>();
 	}
 
