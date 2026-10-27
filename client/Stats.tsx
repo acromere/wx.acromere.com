@@ -22,42 +22,42 @@ export default function Stats(props: any) {
       <table>
         <tbody>
         <tr className="stats">
-          <td className="label">feel</td>
+          <td className="label temp">feel</td>
           <td className="value">{feelsLike}</td>
           <td className="unit">{tempUnit}</td>
         </tr>
         <tr>
-          <td className="label">humid&nbsp;</td>
+          <td className="label humidity">humid&nbsp;</td>
           <td className="value">&nbsp;{humidity}</td>
           <td className="unit">&nbsp;{props.station.humidityUnit}</td>
         </tr>
         <tr>
-          <td className="label">wind&nbsp;</td>
+          <td className="label wind">wind&nbsp;</td>
           <td className="value">&nbsp;{windSpeedText}</td>
           <td className="unit">&nbsp;{props.station.windSpeedUnit}</td>
         </tr>
         <tr>
-          <td className="label">gust&nbsp;</td>
+          <td className="label wind">gust&nbsp;</td>
           <td className="value">&nbsp;{gustSpeedText}</td>
           <td className="unit">&nbsp;{props.station.windSpeedUnit}</td>
         </tr>
         <tr>
-          <td className="label">from&nbsp;</td>
+          <td className="label wind">from&nbsp;</td>
           <td className="value">&nbsp;{windCardinal}</td>
           <td className="unit">&nbsp;{windDirection}{props.station.windDirectionUnit}</td>
         </tr>
         <tr>
-          <td className="label">rain&nbsp;</td>
+          <td className="label rain">rain&nbsp;</td>
           <td className="value">&nbsp;{rainTotalDaily}</td>
           <td className="unit">&nbsp;{props.station.rainUnit}</td>
         </tr>
         <tr>
-          <td className="label">radiation&nbsp;</td>
+          <td className="label sun">radiation&nbsp;</td>
           <td className="value">&nbsp;{solarRadiation}</td>
           <td className="unit">&nbsp;{props.station.radiationUnit}</td>
         </tr>
         <tr>
-          <td className="label">uv index&nbsp;</td>
+          <td className="label sun">uv index&nbsp;</td>
           <td className="value">&nbsp;{solarUltraViolet}</td>
           <td className="unit">&nbsp;{props.station.ultraVioletUnit}</td>
         </tr>

@@ -32,8 +32,8 @@
 	font-size: 0.5em;
 }
 
-.wind {
-	color: #c0a0ff;
+.temp {
+	color: #c0c080;
 }
 
 .humidity {
@@ -41,7 +41,15 @@
 }
 
 .rain {
-	color: #c0ffff;
+	color: #a0c0e0;
+}
+
+.wind {
+	color: #c0a0ff;
+}
+
+.sun {
+	color: #c0a080;
 }
 
 .stats {
@@ -56,7 +64,6 @@
 }
 
 .stats .label {
-	color: #808080;
 	text-align: left;
 	font-size: 1.5rem;
 }
